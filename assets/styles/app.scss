@@ -1,4 +1,30 @@
-@import "~bootstrap/scss/bootstrap";
-body {
-    background-color: lightgray;
-}
+// * Utils imports
+@import "./utils/variables";
+@import "./utils/functions";
+@import "./utils/helpers";
+@import "./utils/mixins";
+@import "./utils/animations";
+
+// * Vendor imports
+@import "./vendor/bootstrap";
+@import "./vendor/fontawesome";
+
+// * Base imports
+@import "./base/reset";
+@import "./base/typography";
+
+// * Components imports
+@import "./components/curve";
+@import "./components/anchor_link";
+
+// * Layout Imports
+@import "./layout/navigation";
+@import "./layout/header";
+@import "./layout/forms";
+@import "./layout/footer";
+
+// * Pages imports
+@import "./pages/home";
+@import "./pages/tricks";
+
+// * Themes import
