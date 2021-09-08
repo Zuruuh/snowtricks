@@ -75,6 +75,11 @@ class Trick
      */
     private $messages;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $overview;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -231,6 +236,18 @@ class Trick
                 $message->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOverview(): ?string
+    {
+        return $this->overview;
+    }
+
+    public function setOverview(?string $overview): self
+    {
+        $this->overview = $overview;
 
         return $this;
     }
