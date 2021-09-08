@@ -10,9 +10,11 @@
 </head>
 
 <body>
-    <main class="container">
+    {% include "layout/nav.html.twig" %}
+    <main class="h-auto">
         {% block body %}{% endblock %}
     </main>
+    {% include "layout/footer.html.twig" %}
 </body>
 
 </html>
