@@ -1,4 +1,16 @@
 .curve {
-    color: $page-secondary-color;
-    transform: translateY(10px);
+    position: relative;
+    transform: translateY(-100%) rotateX(180deg);
+    &-element {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        .shape-fill {
+            color: $page-secondary-color;
+            fill: $page-secondary-color;
+        }
+    }
 }
