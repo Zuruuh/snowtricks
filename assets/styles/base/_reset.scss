@@ -6,7 +6,12 @@
 
 body {
     min-height: 100vh;
-    background: #fff;
+    overflow-x: hidden;
+    background-color: $page-secondary-color;
+}
+
+main {
+    background-color: #fff;
 }
 
 main {
