@@ -5,12 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Snowtricks{% endblock %}</title>
-    {% block stylesheets %}{{ encore_entry_link_tags("app") }}{% endblock %}
-    {% block javascripts %}{{ encore_entry_script_tags("app") }}{% endblock %}
+    {{ encore_entry_link_tags("app") }}
+    {{ encore_entry_script_tags("app") }}
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}{% endblock %}
 </head>
 
 <body>
     {% include "layout/nav.html.twig" %}
+    {% embed "./components/toast.html.twig" %}
+    {% set flashes = app.session.FlashBag.all() %}
+    {% endembed %}
     <main class="min-page-height">
         {% block body %}{% endblock %}
     </main>
