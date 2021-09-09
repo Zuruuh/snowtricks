@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -24,9 +25,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, FlashBagInterface $flash)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->flash = $flash;
     }
 
     public function authenticate(Request $request): PassportInterface
@@ -35,6 +37,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
+        $this->flash->add('success', 'You have successfully connected !');
         return new Passport(
             new UserBadge($username),
             new PasswordCredentials($request->request->get('password', '')),
