@@ -31,6 +31,10 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        if ($this->getUser()) {
+            $this->flash->add("warning", "You are already connected !");
+            return $this->redirectToRoute('home.index');
+        }
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(RegistrationFormType::class, $user);
