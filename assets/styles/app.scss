@@ -18,6 +18,7 @@
 @import "./components/anchor_link";
 @import "./components/password_visibility_toggler";
 @import "./components/toast";
+@import "./components/video_service";
 
 // * Layout Imports
 @import "./layout/navigation";
@@ -28,5 +29,6 @@
 // * Pages imports
 @import "./pages/home";
 @import "./pages/tricks";
+@import "./pages/error";
 
 // * Themes import
