@@ -6,6 +6,9 @@ window.addEventListener("DOMContentLoaded", (e) => {
         return new Toast(toastEl);
     });
     toastList.map((element) => {
-            element.show();
+        element.show();
+        setTimeout(() => {
+            element._element.remove();
+        }, element._config.delay);
     });
 });
