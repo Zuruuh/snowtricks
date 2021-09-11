@@ -37,7 +37,6 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
-        $this->flash->add('success', 'You have successfully connected !');
         return new Passport(
             new UserBadge($username),
             new PasswordCredentials($request->request->get('password', '')),
@@ -49,6 +48,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $this->flash->add('success', 'You have successfully connected !');
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
