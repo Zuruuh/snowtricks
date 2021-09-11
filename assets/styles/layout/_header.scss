@@ -24,6 +24,10 @@
             max-width: 600px;
             line-height: 2.5rem;
             letter-spacing: 0.9px;
+            font-size: 18px;
+            @include media-breakpoint-up(md) {
+                font-size: 23px;
+            }
         }
     }
 }
