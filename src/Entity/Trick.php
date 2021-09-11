@@ -6,6 +6,10 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -34,29 +38,59 @@ class Trick
      * @ORM\Column(type="string", length=128)
      */
     private $name;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
-
+    
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $overview;
+    
+    // https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    #[Assert\File(
+        maxSize: "8192k",
+        maxSizeMessage: "Your image is too heavy! Max image size is 8Mb",
+        mimeTypes: ["image/jpeg", "image/png"],
+        mimeTypesMessage: "Please upload a valid image (.jpeg or .png)"
+    )]
+    protected $thumbnail;
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $thumbnail_path;
+    private $thumbnail_path = "./static/assets/trick.png";
 
+    // #[Assert\All(
+    //     constraints: [
+    //         Assert\Collection(
+    //             fields: [
+    //                 Assert\File(
+    //                     maxSize: "8192k",
+    //                     maxSizeMessage: "Your images are too heavy! Max images size is 8Mb",
+    //                     mimeTypes: ["image/jpeg", "image/png"],
+    //                     mimeTypesMessage: "Please upload a valid image (.jpeg or .png)"
+    //                 ),    
+    //             ]
+    //         )
+    //     ]
+    // )]
+
+    protected $images = [];
     /**
      * @ORM\Column(type="array", nullable=true)
      */
     private $images_path = [];
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $videos;
 
@@ -75,14 +109,11 @@ class Trick
      */
     private $messages;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $overview;
-
     public function __construct()
     {
-        $this->messages = new ArrayCollection();
+        $this->messages    = new ArrayCollection();
+        $this->post_date   = new \DateTime();
+        $this->last_update = new \DateTime();
     }
 
     public function getId(): ?int
@@ -150,6 +181,30 @@ class Trick
         return $this;
     }
 
+    public function getOverview(): ?string
+    {
+        return $this->overview;
+    }
+
+    public function setOverview(?string $overview): self
+    {
+        $this->overview = $overview;
+
+        return $this;
+    }
+    
+    public function setThumbnail(?File $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
+        
+        return $this;
+    }
+
+    public function getThumbnail(): ?File
+    {
+        return $this->thumbnail;
+    }
+
     public function getThumbnailPath(): ?string
     {
         return $this->thumbnail_path;
@@ -158,6 +213,18 @@ class Trick
     public function setThumbnailPath(string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
+
+        return $this;
+    }
+
+    public function getImages(): ?array
+    {
+        return $this->images;
+    }
+
+    public function setImages(?array $images = []): self
+    {
+        $this->images = $images;
 
         return $this;
     }
@@ -174,12 +241,12 @@ class Trick
         return $this;
     }
 
-    public function getVideos(): ?string
+    public function getVideos(): ?array
     {
         return $this->videos;
     }
 
-    public function setVideos(?string $videos): self
+    public function setVideos($videos): self
     {
         $this->videos = $videos;
 
@@ -236,18 +303,6 @@ class Trick
                 $message->setPost(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getOverview(): ?string
-    {
-        return $this->overview;
-    }
-
-    public function setOverview(?string $overview): self
-    {
-        $this->overview = $overview;
 
         return $this;
     }
