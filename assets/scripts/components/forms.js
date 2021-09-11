@@ -1,5 +1,5 @@
 const passwordButtons = document.querySelectorAll('.password-field-toggler');
-const checkboxElements = document.querySelectorAll('.checkbox-element');
+const checkboxElements = document.querySelectorAll('.check-element');
 
 const togglePasswordField = (event) => {
     const { target } = event;
@@ -18,13 +18,15 @@ const toggleCheckbox = (event) => {
     const node = event.target;
     switch(node.nodeName.toLowerCase()) {
         case "label":
-            const div = node.parentElement;
-            var checkbox = div.querySelector("input[type=checkbox]");
-            checkbox.checked = !checkbox.checked;
+        const div = node.parentElement;
+            var checkbox = div.querySelector("input");
+            if (checkbox.getAttribute("type") === "checkbox") checkbox.checked = !checkbox.checked;
+            if (checkbox.getAttribute("type") === "radio") checkbox.checked = true;
             break;
         case "div":
-            var checkbox = node.querySelector("input[type=checkbox]");
-            checkbox.checked = !checkbox.checked;
+            var checkbox = node.querySelector("input");
+            if (checkbox.getAttribute("type") === "checkbox") checkbox.checked = !checkbox.checked;
+            if (checkbox.getAttribute("type") === "radio") checkbox.checked = true;
             break;
     }
 }
@@ -36,3 +38,5 @@ passwordButtons.forEach(button => {
 checkboxElements.forEach(checkboxDiv => {
     checkboxDiv.addEventListener('click', toggleCheckbox);
 });
+
+module.exports = { toggleCheckbox };
