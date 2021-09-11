@@ -40,6 +40,11 @@ class Category
         $this->tricks = new ArrayCollection();
     }
 
+    public function __tostring()
+    {
+        return $this->name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
