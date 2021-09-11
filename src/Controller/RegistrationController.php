@@ -20,7 +20,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private $emailVerifier;
+    private $emailVerifier, $flash;
 
     public function __construct(EmailVerifier $emailVerifier, FlashBagInterface $flash)
     {
@@ -44,12 +44,12 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user = $form->getData();
             
-                    $user->setPassword(
-                        $passwordEncoder->encodePassword(
-                            $user,
-                            $form->get('plainPassword')->getData()
-                        )
-                    );
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
 
             $em->persist($user);
             $em->flush();
@@ -60,14 +60,14 @@ class RegistrationController extends AbstractController
                     ->from(new Address('blog@younes-ziadi.com', 'Snowtricks'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('security/confirmation_email.html.twig')
             );
     
             $this->flash->add("success", "An email has been sent to you. Verify your account in order to use the website");
             return $this->redirectToRoute('home.index');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('security/register.html.twig', [
             'form' => $form->createView(),
         ]);
     }
