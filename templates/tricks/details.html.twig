@@ -10,6 +10,13 @@
             <div class="trick-image-background"
                 style="background: url('{{trick.thumbnail}}') no-repeat center center/cover"></div>
             <h1 id="header-title">{{trick.name}}</h1>
+            {% if is_granted('ROLE_USER') %}
+            <div class="component-actions trick-header-actions">
+                <!-- TODO Create edit and delete path -->
+                <a href="#"><i class="fas fa-pen"></i></a>
+                <a href="#"><i class="fas fa-trash-alt"></i></a>
+            </div>
+            {% endif %}
         </div>
         <div class="scrollable-container">
             <div class="trick-scrollable scrollable" data-videos="{{trick.videos}}"
@@ -23,9 +30,9 @@
                 <hr>
                 <div class="trick-infos">
                     <ul class="trick-badges">
-                        <li class="trick-badge">Category: <span>{{trick.category}}</span></li>
-                        <li class="trick-badge">Created at: <span>{{trick.created_at}}</span></li>
-                        <li class="trick-badge">Last modification: <span>{{trick.updated_at}}</span></li>
+                        <li class="trick-badge bg-primary">Category: <span>{{trick.category}}</span></li>
+                        <li class="trick-badge bg-primary">Created at: <span>{{trick.created_at}}</span></li>
+                        <li class="trick-badge bg-primary">Last modification: <span>{{trick.updated_at}}</span></li>
                     </ul>
                 </div>
                 <hr>
