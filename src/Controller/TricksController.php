@@ -139,7 +139,7 @@ class TricksController extends AbstractController
     #[Route("/edit/{slug}", name: "edit")]
     public function edit(): Response
     {
-        
+        return $this->render("tricks/edit.html.twig", []);
     }
 
     #[Route("/delete/{slug}", name: "delete")]
