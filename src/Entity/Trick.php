@@ -66,7 +66,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $thumbnail_path = "./static/assets/trick.png";
+    private $thumbnail_path;
 
     // #[Assert\All(
     //     constraints: [
@@ -241,7 +241,7 @@ class Trick
         return $this;
     }
 
-    public function getVideos(): ?array
+    public function getVideos(): ?string
     {
         return $this->videos;
     }
