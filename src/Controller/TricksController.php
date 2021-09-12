@@ -26,7 +26,7 @@ class TricksController extends AbstractController
      * ? - /tricks/details/{slug} PUBLIC (add comments form and pagination)
      * ? - /tricks/create PROTECTED (style form page)
      * - /tricks/edit/{slug} PROTECTED
-     * - /tricks/delete/{slug} PROTECTED
+     * * - /tricks/delete/{slug} PROTECTED
      */
 
     private $flash;
@@ -37,25 +37,7 @@ class TricksController extends AbstractController
         $this->flash = $flash;
         $this->service = new TrickService($em, $flash);
     }
-
-    #[Route('/', name: 'index')]
-    public function index(): Response
-    {
-        return $this->render('tricks/index.html.twig', []);
-    }
     
-    #[Route('/search', name: 'search')]
-    public function search(): Response
-    {
-        return $this->render("tricks/search.html.twig", []);
-    }
-    
-    #[Route('/search/{query}', name: 'search.query')]
-    public function searchQuery(): Response
-    {
-        return $this->render("tricks/search.query.html.twig", []);
-    }
-
     #[Route("/details/{slug}", name: "details")]
     public function details(string $slug): Response
     {
@@ -152,5 +134,47 @@ class TricksController extends AbstractController
         return $this->render("tricks/create.html.twig", [
             "form" => $form->createView()
         ]);
+    }
+
+    #[Route("/edit/{slug}", name: "edit")]
+    public function edit(): Response
+    {
+        
+    }
+
+    #[Route("/delete/{slug}", name: "delete")]
+    public function delete(string $slug): Response
+    {
+        if (!$this->getUser()) {
+            $this->flash->add("warning", "You must be logged in to access this page !");
+            return $this->redirectToRoute('app_login');
+        }
+
+        $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $trickRepo->findOneBy(['slug' => $slug]);
+        
+        if (!$trick) {
+            $this->flash->add("warning", "This trick does not exist !");
+            return $this->redirectToRoute("home.index");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($trick);
+        $em->flush();
+
+        $this->flash->add("success", "Trick successfully deleted !");
+        return $this->redirectToRoute("home.index");
+    }
+    
+    #[Route('/search', name: 'search')]
+    public function search(): Response
+    {
+        return $this->render("tricks/search.html.twig", []);
+    }
+    
+    #[Route('/search/{query}', name: 'search.query')]
+    public function searchQuery(): Response
+    {
+        return $this->render("tricks/search.query.html.twig", []);
     }
 }
