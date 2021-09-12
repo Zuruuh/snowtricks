@@ -20,7 +20,8 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private $emailVerifier, $flash;
+    private $emailVerifier;
+    private $flash;
 
     public function __construct(EmailVerifier $emailVerifier, FlashBagInterface $flash)
     {
@@ -55,7 +56,9 @@ class RegistrationController extends AbstractController
             $em->flush();
     
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email', 
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('blog@younes-ziadi.com', 'Snowtricks'))
                     ->to($user->getEmail())
@@ -63,7 +66,10 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('security/confirmation_email.html.twig')
             );
     
-            $this->flash->add("success", "An email has been sent to you. Verify your account in order to use the website");
+            $this->flash->add(
+                "success", 
+                "An email has been sent to you. Verify your account in order to use the website"
+            );
             return $this->redirectToRoute('home.index');
         }
 
@@ -76,11 +82,15 @@ class RegistrationController extends AbstractController
     {
         $id = $request->get('id');
 
-        if (null === $id) return $this->redirectToRoute('app_register');
+        if (null === $id) {
+            return $this->redirectToRoute('app_register');
+        }
         
         $user = $userRepository->find($id);
 
-        if (null === $user) return $this->redirectToRoute('app_register');
+        if (null === $user) {
+            return $this->redirectToRoute('app_register');
+        }
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {

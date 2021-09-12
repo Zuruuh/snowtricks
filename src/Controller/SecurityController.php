@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class SecurityController extends AbstractController
 {
 
+    private $flash;
+
     public function __construct(FlashBagInterface $flash)
     {
         $this->flash = $flash;

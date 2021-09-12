@@ -19,7 +19,7 @@ use App\Form\TrickType;
 #[Route('/tricks', name: 'tricks.')]
 class TricksController extends AbstractController
 {
-    /** 
+    /**
      * TODO: ROUTES:
      * - /tricks/search PUBLIC
      * - /tricks/search/{query} PUBLIC
@@ -29,7 +29,8 @@ class TricksController extends AbstractController
      * - /tricks/delete/{slug} PROTECTED
      */
 
-     private $flash;
+    private $flash;
+    private $service;
 
     public function __construct(FlashBagInterface $flash, EntityManagerInterface $em)
     {
@@ -84,7 +85,7 @@ class TricksController extends AbstractController
                 "videos" => $trick->getVideos(),
                 "created_at" => $created_at->format('Y-m-d H:i:s'),
                 "updated_at" => $last_update->format('Y-m-d H:i:s')
-            ] 
+            ]
         ]);
     }
     

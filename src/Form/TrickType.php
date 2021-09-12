@@ -27,14 +27,14 @@ class TrickType extends AbstractType
             ->add('thumbnail', FileType::class, [
                 "required" => false
             ]) // // TODO Add thumbnail uploading
-            ->add('images', FileType::class,[ // // TODO Add images uploading for images
-                'multiple' => true,
-                'required' => false,
+            ->add('images', FileType::class, [ // // TODO Add images uploading for images
+                'multiple' => true, 
+                'required' => false
             ])
             ->add('category')
 
             // // TODO Add dynamic fields for videos:
-            // Let users add or remove fields by clicking on the +/- buttons  
+            // Let users add or remove fields by clicking on the +/- buttons
             ->add('videos', TextType::class, [
                 "required" => false,
                 "attr" => [

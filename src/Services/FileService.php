@@ -8,6 +8,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FileService
 {
+    
+    private $fileSystem;
+
     public function __construct()
     {
         $this->fileSystem = new Filesystem();

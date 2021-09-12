@@ -11,6 +11,10 @@ use App\Service\FileService;
 
 class TrickService
 {
+    private $em;
+    private FileService $fileService;
+    private FlashBagInterface $flash;
+    private Filesystem $filesystem;
 
     public function __construct($entityManager, FlashBagInterface $flash)
     {
@@ -85,7 +89,7 @@ class TrickService
                 $this->flash->add("warning", "Your images' size must be less than 4mb per image!");
                 return false;
             }
-            // 3 - Images are valid, save them      
+            // 3 - Images are valid, save them  
             $images_path[] = $this->saveFile($image, "/static/uploads/$trick_uid/images");
         }
         return $images_path;
@@ -94,55 +98,54 @@ class TrickService
     public function checkAndSaveVideos($videos_data)
     {
         $videos_data = json_decode($videos_data, true);
-                // 1 - Verify data integrity
-                if (!is_array($videos_data)) {
+        // 1 - Verify data integrity
+        if (!is_array($videos_data)) {
+            $this->flash->add("warning", "Please only upload valid videos data");
+            return false;
+        }
+        // 2 - Check if user sent more than 3 videos
+        if (sizeof($videos_data) > 3) {
+            $this->flash->add("warning", "You can only add up to 3 videos !");
+            return false;
+        }
+        // 3 - Validate each video individually
+        $videos = [];
+
+        foreach ($videos_data as $video) {
+            // 3.1 - Check if array has more than 2 properties (id & service)
+            if (sizeof($video) > 2) {
+                $this->flash->add("warning", "Please only upload valid videos data");
+                return false;
+            }
+            
+            // 3.2 - Check if the 2 existing properties are "service" and "id"
+            if (!array_key_exists("id", $video) || !array_key_exists("service", $video)) {
+                $this->flash->add("warning", "Please only upload valid videos data");
+                return false;
+            }
+
+            // 3.3 - Check if id is valid
+            if (strlen($video["id"]) > 16 || strlen($video["id"]) == 0) {
+                $this->flash->add("warning", "Please only upload valid videos data");
+                return false;
+            }
+
+            // 3.4 - Check if service is valid
+            switch (strtolower($video["service"])) {
+                case "youtube":
+                case "dailymotion":
+                case "vimeo":
+                    break;
+                default:
                     $this->flash->add("warning", "Please only upload valid videos data");
                     return false;
-                }
-                // 2 - Check if user sent more than 3 videos
-                if (sizeof($videos_data) > 3) {
-                    $this->flash->add("warning", "You can only add up to 3 videos !");
-                    return false;
-                }
-                // 3 - Validate each video individually
-                $videos = [];
+                    break;
+            }
 
-                foreach ($videos_data as $video) {
-                    // 3.1 - Check if array has more than 2 properties (id & service)
-                    if (sizeof($video) > 2) {
-                        $this->flash->add("warning", "Please only upload valid videos data");
-                        return false;
-                    }
-                    
-                    // 3.2 - Check if the 2 existing properties are "service" and "id"
-                    if (!array_key_exists("id", $video) || !array_key_exists("service", $video)) {
-                        $this->flash->add("warning", "Please only upload valid videos data");
-                        return false;
-                    }
-
-                    // 3.3 - Check if id is valid
-                    if (strlen($video["id"]) > 16 || strlen($video["id"]) == 0) {
-                        $this->flash->add("warning", "Please only upload valid videos data");
-                        return false;
-                    }
-
-                    // 3.4 - Check if service is valid
-                    switch(strtolower($video["service"])) {
-                        case "youtube":
-                        case "dailymotion":
-                        case "vimeo":
-                            break;
-                        default:
-                            $this->flash->add("warning", "Please only upload valid videos data");
-                            return false;
-                            break;
-                    }
-
-                    // 3.5 - Add video to array
-                    $videos[] = ["service" => $video["service"], "id" => $video["id"]];
-                }
-                // 4 - Verifications are done, save videos
-                return json_encode($videos);
+            // 3.5 - Add video to array
+            $videos[] = ["service" => $video["service"], "id" => $video["id"]];
+        }
+            // 4 - Verifications are done, save videos
+        return json_encode($videos);
     }
-
 }

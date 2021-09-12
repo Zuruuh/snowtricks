@@ -68,22 +68,8 @@ class Trick
      */
     private $thumbnail_path;
 
-    // #[Assert\All(
-    //     constraints: [
-    //         Assert\Collection(
-    //             fields: [
-    //                 Assert\File(
-    //                     maxSize: "8192k",
-    //                     maxSizeMessage: "Your images are too heavy! Max images size is 8Mb",
-    //                     mimeTypes: ["image/jpeg", "image/png"],
-    //                     mimeTypesMessage: "Please upload a valid image (.jpeg or .png)"
-    //                 ),    
-    //             ]
-    //         )
-    //     ]
-    // )]
-
     protected $images = [];
+    
     /**
      * @ORM\Column(type="array", nullable=true)
      */
