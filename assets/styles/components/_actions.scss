@@ -6,8 +6,16 @@
   justify-content: space-between;
   width: 90px;
   border-radius: 15px;
+  button {
+    border: 0;
+    outline: 0;
+    background: transparent;
+  }
   i.fa-trash-alt {
-    color: red;
+    color: #dc3545;
+  }
+  i.fa-pen {
+    color: #007bff;
   }
 }
 
