@@ -19,6 +19,7 @@
 @import "./components/password_visibility_toggler";
 @import "./components/toast";
 @import "./components/video_service";
+@import "./components/scrollable";
 
 // * Layout Imports
 @import "./layout/navigation";
@@ -30,5 +31,6 @@
 @import "./pages/home";
 @import "./pages/tricks";
 @import "./pages/error";
+@import "./pages/tricks/details";
 
 // * Themes import
