@@ -76,7 +76,6 @@ const createScrollable = (scrollable, i) => {
   scrollable.parentElement.appendChild(rightButton);
 
   const updateScrollable = (direction, items, innerScroller) => {
-    console.log(innerScroller);
     if (direction === "left") {
       const last = items[items.length - 1];
       items[items.length - 1].remove();
