@@ -1,0 +1,12 @@
+.trick-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  li {
+    list-style-type: none;
+    margin: 0.5rem 0.5rem;
+    color: #fff;
+    border-radius: 1rem;
+    padding: 0.5rem;
+  }
+}

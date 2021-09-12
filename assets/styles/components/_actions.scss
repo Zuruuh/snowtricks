@@ -1,0 +1,19 @@
+.component-actions {
+  background: #fff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90px;
+  border-radius: 15px;
+  i.fa-trash-alt {
+    color: red;
+  }
+}
+
+.trick-header-actions {
+  z-index: 10;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
