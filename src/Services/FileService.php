@@ -23,7 +23,7 @@ class FileService
 
     public function move(UploadedFile $file, string $path, string $name): string
     {
-        $file->move(getcwd() . $path, $name);
-        return $path . $name;
+        $file->move(getcwd() . $path . "/", $name);
+        return $path . "/" . $name;
     }
 }
