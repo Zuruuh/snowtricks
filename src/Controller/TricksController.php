@@ -23,9 +23,8 @@ class TricksController extends AbstractController
      * TODO: ROUTES:
      * - /tricks/search PUBLIC
      * - /tricks/search/{query} PUBLIC
-     * - /tricks/details/{slug} PUBLIC
-     * * - /tricks/create PROTECTED 
-     * - /tricks/edit/{slug} PROTECTED
+     * ? - /tricks/details/{slug} PUBLIC (add comments form and pagination)
+     * ? - /tricks/create PROTECTED (style form page)
      * - /tricks/edit/{slug} PROTECTED
      * - /tricks/delete/{slug} PROTECTED
      */
