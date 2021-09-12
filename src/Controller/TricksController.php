@@ -65,8 +65,27 @@ class TricksController extends AbstractController
             $this->flash->add("warning", "This trick does not exist !");
             return $this->redirectToRoute("home.index");
         }
+        $created_at = $trick->getPostDate();
+        $last_update = $trick->getLastUpdate();
+
         return $this->render("tricks/details.html.twig", [
-            "slug" => $slug
+            "trick" => [
+                "id" => $trick->getId(),
+                "author" => [
+                    "id" => $trick->getAuthor()->getId(),
+                    "username" => $trick->getAuthor()->getUsername(),
+                ],
+                "name" => $trick->getName(),
+                "category" => $trick->getCategory(),
+                "overview" => $trick->getOverview(),
+                "description" => $trick->getDescription(),
+                "slug" => $trick->getSlug(),
+                "thumbnail" => $trick->getThumbnailPath(),
+                "images" => $trick->getImagesPath(),
+                "videos" => $trick->getVideos(),
+                "created_at" => $created_at->format('Y-m-d H:i:s'),
+                "updated_at" => $last_update->format('Y-m-d H:i:s')
+            ] 
         ]);
     }
     
@@ -109,6 +128,9 @@ class TricksController extends AbstractController
                     ]);
                 }
                 $trick->setImagesPath($path);
+                if (!$thumbnail_data) {
+                    $trick->setThumbnailPath(json_decode($path)[0]);
+                }
             }
             
             // Validate videos, then save them
