@@ -1,3 +1,40 @@
 {% extends "base.html.twig" %}
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('scrollable') }}
+{% endblock %}
 {% block body %}
+<div class="container" style="padding-top: 4rem">
+    <div class="card" id="trick-card">
+        <div class="trick-hero">
+            <div class="trick-image-background"
+                style="background: url('{{trick.thumbnail}}') no-repeat center center/cover"></div>
+            <h1 id="header-title">{{trick.name}}</h1>
+        </div>
+        <div class="scrollable-container">
+            <div class="trick-scrollable scrollable" data-videos="{{trick.videos}}"
+                data-images="{{trick.images | join("|")}}">
+            </div>
+        </div>
+        <div class="container">
+            <div class="trick-content">
+                <p>{{trick.overview}}</p>
+                <p>{{trick.description}}</p>
+                <hr>
+                <div class="trick-infos">
+                    <ul class="trick-badges">
+                        <li class="trick-badge">Category: <span>{{trick.category}}</span></li>
+                        <li class="trick-badge">Created at: <span>{{trick.created_at}}</span></li>
+                        <li class="trick-badge">Last modification: <span>{{trick.updated_at}}</span></li>
+                    </ul>
+                </div>
+                <hr>
+            </div>
+            <div class="trick-comments">
+                <!-- TODO Display comment form if user is logged in -->
+                <!-- TODO Display trick's comments and paginate them -->
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
