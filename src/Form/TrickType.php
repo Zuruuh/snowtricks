@@ -28,7 +28,7 @@ class TrickType extends AbstractType
                 "required" => false
             ]) // // TODO Add thumbnail uploading
             ->add('images', FileType::class, [ // // TODO Add images uploading for images
-                'multiple' => true, 
+                'multiple' => true,
                 'required' => false
             ])
             ->add('category')

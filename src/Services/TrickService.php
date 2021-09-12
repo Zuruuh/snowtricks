@@ -89,7 +89,7 @@ class TrickService
                 $this->flash->add("warning", "Your images' size must be less than 4mb per image!");
                 return false;
             }
-            // 3 - Images are valid, save them  
+            // 3 - Images are valid, save them
             $images_path[] = $this->saveFile($image, "/static/uploads/$trick_uid/images");
         }
         return $images_path;

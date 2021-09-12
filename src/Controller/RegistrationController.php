@@ -57,7 +57,7 @@ class RegistrationController extends AbstractController
     
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email', 
+                'app_verify_email',
                 $user,
                 (new TemplatedEmail())
                     ->from(new Address('blog@younes-ziadi.com', 'Snowtricks'))
@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
             );
     
             $this->flash->add(
-                "success", 
+                "success",
                 "An email has been sent to you. Verify your account in order to use the website"
             );
             return $this->redirectToRoute('home.index');
