@@ -57,9 +57,8 @@ class TrickService
         return $this->fileService->move($file, $path, $file_name);
     }
 
-    public function checkAndSaveImages($images_data)
+    public function checkAndSaveImages(array $images_data, string $trick_uid): array
     {
-        $trick_uid = uniqid();
         if (!is_array($images_data)) {
             $images_data = [$images_data];
         }
@@ -147,5 +146,16 @@ class TrickService
         }
             // 4 - Verifications are done, save videos
         return json_encode($videos);
+    }
+
+    public function deleteTrick(Trick $trick): void
+    {
+        $this->fileService->deleteFolder("/static/uploads/" . $trick->getSlug());
+    }
+
+    public function deleteFile(string $path): void
+    {
+        dump($path);
+        $this->fileService->deleteFolder("/static/uploads/" . $path);
     }
 }
