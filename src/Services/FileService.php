@@ -9,7 +9,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class FileService
 {
     
-    private $fileSystem;
+    private FileSystem $fileSystem;
 
     public function __construct()
     {
@@ -28,5 +28,11 @@ class FileService
     {
         $file->move(getcwd() . $path . "/", $name);
         return $path . "/" . $name;
+    }
+
+    public function deleteFolder(string $folder): void
+    {
+        dump($folder);
+        $this->fileSystem->remove(getcwd() . $folder);
     }
 }
