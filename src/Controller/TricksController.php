@@ -25,7 +25,7 @@ class TricksController extends AbstractController
      * - /tricks/search/{query} PUBLIC
      * ? - /tricks/details/{slug} PUBLIC (add comments form and pagination)
      * ? - /tricks/create PROTECTED (style form page)
-     * - /tricks/edit/{slug} PROTECTED
+     * * - /tricks/edit/{slug} PROTECTED
      * * - /tricks/delete/{slug} PROTECTED
      */
 
@@ -80,7 +80,6 @@ class TricksController extends AbstractController
         }
         
         $trick = new Trick();
-        $trick_uid = uniqid();
         $em = $this->getDoctrine()->getManager();
         $repo = $this->getDoctrine()->getRepository(Trick::class);
 
@@ -92,7 +91,8 @@ class TricksController extends AbstractController
             $this->service->createDir();
             $trick->setAuthor($this->getUser());
             $trick->setSlug($this->service->makeSlug($trick->getName()));
-            
+            $trick_uid = $this->service->saveTrick($trick);
+
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
             if ($thumbnail_data != null) {
@@ -103,16 +103,80 @@ class TricksController extends AbstractController
             // Validate then save illustration images
             $images_data = $form->get('images')->getData();
             if ($images_data != null) {
-                $path = $this->service->checkAndSaveImages($images_data);
+                $path = $this->service->checkAndSaveImages($images_data, $trick_uid);
                 if (!$path) {
                     return $this->render("tricks/create.html.twig", [
                         "form" => $form->createView()
                     ]);
                 }
                 $trick->setImagesPath($path);
-                if (!$thumbnail_data) {
-                    $trick->setThumbnailPath(json_decode($path)[0]);
+            }
+            
+            // Validate videos, then save them
+            $videos_data = $form->get("videos")->getData();
+            if ($videos_data != null) {
+                $videos = $this->service->checkAndSaveVideos($videos_data);
+                if (!$videos) {
+                    return $this->render("tricks/create.html.twig", [
+                        "form" => $form->createView()
+                    ]);
                 }
+                $trick->setVideos($videos);
+            }
+            
+            // Creation is done, redirect user towards new trick's details page
+            $em->persist($trick);
+            $em->flush();
+            return $this->redirectToRoute('tricks.details', ['slug' => $trick_uid]);
+        }
+
+        return $this->render("tricks/create.html.twig", [
+            "form" => $form->createView(),
+        ]);
+    }
+
+    #[Route("/edit/{slug}", name: "edit")]
+    public function edit(Request $request, string $slug): Response
+    {
+        if (!$this->getUser()) {
+            $this->flash->add("warning", "You must be logged in to access this page !");
+            return $this->redirectToRoute('app_login');
+        }
+        
+        $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $trickRepo->findOneBy(['slug' => $slug]);
+        if (!$trick) {
+            $this->flash->add("warning", "This trick does not exist !");
+            return $this->redirectToRoute("home.index");
+        }
+
+        $form = $this->createForm(TrickType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $trick = $form->getData();
+            $this->service->createDir();
+            $trick->setSlug($this->service->makeSlug($trick->getName()));
+            
+            // Save Thumbnail
+            $thumbnail_data = $form->get('thumbnail')->getData();
+            if ($thumbnail_data != null) {
+                $this->service->deleteFile($slug . "/thumbnail");
+                $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$slug/thumbnail/");
+                $trick->setThumbnailPath($path);
+            }
+            
+            // Validate then save illustration images
+            $images_data = $form->get('images')->getData();
+            if ($images_data != null) {
+                $this->service->deleteFile($slug . "/images");
+                $path = $this->service->checkAndSaveImages($images_data, $slug);
+                if (!$path) {
+                    return $this->render("tricks/create.html.twig", [
+                        "form" => $form->createView()
+                    ]);
+                }
+                $trick->setImagesPath($path);
             }
             
             // Validate videos, then save them
@@ -132,14 +196,9 @@ class TricksController extends AbstractController
         }
 
         return $this->render("tricks/create.html.twig", [
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "videos" => $trick->getVideos(),
         ]);
-    }
-
-    #[Route("/edit/{slug}", name: "edit")]
-    public function edit(): Response
-    {
-        return $this->render("tricks/edit.html.twig", []);
     }
 
     #[Route("/delete/{slug}", name: "delete")]
@@ -159,6 +218,7 @@ class TricksController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $this->service->deleteTrick($trick);
         $em->remove($trick);
         $em->flush();
 
