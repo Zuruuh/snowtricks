@@ -5,7 +5,7 @@ const initialVideos = JSON.parse(
   tricksVideoElement.getAttribute("data-initial-values").trim()
 );
 
-// TODO Parse initialVideos & add content to page
+// // /TODO Parse initialVideos & add content to page
 // TODO Refactor code to use OOP
 
 const removeVideoButton = document.getElementById("trick-videos-remove");

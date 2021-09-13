@@ -99,7 +99,7 @@ class RegistrationController extends AbstractController
             $this->addFlash('verify_email_error', $exception->getReason());
             return $this->redirectToRoute('app_register');
         }
-        // // TODO Log user in
+        // // / TODO Log user in
         
         $request->getSession()->set(Security::LAST_USERNAME, $user->getUserIdentifier());
         $this->addFlash('success', 'Your email address has been verified, have fun!');
