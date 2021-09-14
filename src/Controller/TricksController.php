@@ -8,21 +8,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
+use App\Repository\TrickRepository;
 use App\Entity\Trick;
 use App\Service\TrickService;
+use App\Form\TrickFormType;
 
 use App\Entity\Comment;
 use App\Entity\Category;
-use App\Form\TrickType;
 
 #[Route('/tricks', name: 'tricks.')]
 class TricksController extends AbstractController
 {
     /**
      * TODO: ROUTES:
-     * - /tricks/search PUBLIC
-     * - /tricks/search/{query} PUBLIC
+     * ? - /tricks/search PUBLIC (create animations)
      * ? - /tricks/details/{slug} PUBLIC (add comments form and pagination)
      * ? - /tricks/create PROTECTED (style form page)
      * * - /tricks/edit/{slug} PROTECTED
@@ -83,7 +86,7 @@ class TricksController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $repo = $this->getDoctrine()->getRepository(Trick::class);
 
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -96,7 +99,7 @@ class TricksController extends AbstractController
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
             if ($thumbnail_data != null) {
-                $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$trick_uid/thumbnail/");
+                $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$trick_uid/thumbnail");
                 $trick->setThumbnailPath($path);
             }
 
@@ -150,7 +153,7 @@ class TricksController extends AbstractController
             return $this->redirectToRoute("home.index");
         }
 
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -162,7 +165,7 @@ class TricksController extends AbstractController
             $thumbnail_data = $form->get('thumbnail')->getData();
             if ($thumbnail_data != null) {
                 $this->service->deleteFile($slug . "/thumbnail");
-                $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$slug/thumbnail/");
+                $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$slug/thumbnail");
                 $trick->setThumbnailPath($path);
             }
             
@@ -227,14 +230,88 @@ class TricksController extends AbstractController
     }
     
     #[Route('/search', name: 'search')]
-    public function search(): Response
+    public function search(TrickRepository $repo, Request $request): Response
     {
-        return $this->render("tricks/search.html.twig", []);
+        $form = $this->createFormBuilder([])
+        ->add('search', SearchType::class, [
+            "required" => false,
+            "attr" => [
+                "class" => "form-control",
+                "placeholder" => "Search for a trick by keywords.."
+            ]
+        ])
+        ->add('category', EntityType::class, [
+            "required" => false,
+            "attr" => [
+                "class" => "form-control",
+            ],
+            "class" => Category::class,
+            
+        ])
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $query = [];
+            $query["query"] = $data["search"] ? $this->service->makeSlug($data["search"], "+") : null;
+            if ($data["category"]) {
+                $query["category"] = $data["category"]->getId();
+            } else {
+                $query["category"] = null;
+            }
+            return $this->redirectToRoute('tricks.search', [
+                "query" => $query["query"],
+                "category" => $query["category"]
+            ]);
+        }
+
+        $query = $request->get("query");
+        $category = $request->get("category");
+        $tricks = [];
+        if ($query || $category) {
+            if (!$category) {
+                $category = 0;
+            }
+            $query = preg_replace('/\+{2,}/', "+", $query);
+            $query = str_replace("+", " ", $query);
+            $tricks = $repo->search($query, $category);
+        }
+
+        $tricks_list = [];
+        foreach ($tricks as $trick) {
+            $tricks_list[] = [
+                "id" => $trick->getId(),
+                "category" => [
+                    "id" => $trick->getCategory()->getId(),
+                    "name" => $trick->getCategory()->getName(),
+                ],
+                "author" => [
+                    "id" => $trick->getAuthor()->getId(),
+                    "username" => $trick->getAuthor()->getUsername(),
+                    "profile_picture" => /*$trick->getAuthor()->getProfilePicture()*/"/static/assets/avatars/default.png",
+                    /* 
+                    TODO Add users profile pictures  */
+                ],
+                "name" => $trick->getName(),
+                "overview" => $trick->getOverview(),
+                "thumbnail" => $trick->getThumbnailPath(),
+                "slug" => $trick->getSlug(),
+                "post_date" => $trick->getPostDate()->format("\\t\h\\e d/m/Y \a\\t h:m:s"),
+                "last_update" => $trick->getLastUpdate()->format("\\t\h\\e d/m/Y \a\\t h:m:s"),
+            ];
+        }
+
+        return $this->render("tricks/search.html.twig", [
+            "form" => $form->createView(),
+            "tricks" => $tricks_list
+        ]);
     }
     
-    #[Route('/search/{query}', name: 'search.query')]
-    public function searchQuery(): Response
-    {
-        return $this->render("tricks/search.query.html.twig", []);
-    }
+    // #[Route('/search/query', name: 'search.query')]
+    // public function searchQuery(TrickRepository $repo, Request $request): Response
+    // {
+
+    // }
 }
