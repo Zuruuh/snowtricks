@@ -19,6 +19,30 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
+    public function search(string $keywords = "", int $category = 0, int $offset = 0, int $limit = 10): array
+    {
+        // TODO Implement pagination
+        $query = $this->createQueryBuilder('t');
+        $query->where("t.id > 1");
+        
+        if ($keywords !== "") {
+            $query->andWhere('MATCH (t.name, t.description, t.overview) AGAINST (:keywords boolean) > 0')
+                ->setParameter('keywords', $keywords);
+        }
+        
+        if ($category > 0) {
+            $query->leftJoin("t.category", "c")
+                ->andWhere("c.id = :category")
+                ->setParameter('category', $category);
+        }
+
+        $query->orderBy('t.id', 'DESC');
+
+        $results = $query->getQuery()->getResult();
+
+        return $results;
+    }
+
     // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */
