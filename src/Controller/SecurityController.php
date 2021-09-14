@@ -90,7 +90,13 @@ class SecurityController extends AbstractController
             $token = "{$user->getPassword()};$time;{$user->getId()}";
             $token = base64_encode($token);
 
-            $reset_password_link = $this->generateUrl('auth.reset_password', ["token" => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+            $reset_password_link = $this->generateUrl(
+                'auth.reset_password',
+                 [
+                    "token" => $token
+                ], 
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
             
             $email = (new TemplatedEmail())
                 ->from("blog@younes-ziadi.com")
@@ -124,7 +130,7 @@ class SecurityController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $service = new \App\Service\SecurityService($this->flash, $passwordEncoder);
-        $user = $service->checkToken($token, $user_repo); 
+        $user = $service->checkToken($token, $user_repo);
         
         if (!$user) {
             return $this->redirectToRoute('auth.forgot_password');

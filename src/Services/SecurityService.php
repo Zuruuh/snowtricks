@@ -11,8 +11,10 @@ class SecurityService
     private FlashBagInterface $flash;
     private UserPasswordEncoderInterface $passwordEncoder;
 
-    public function __construct(FlashBagInterface $flash, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(
+        FlashBagInterface $flash, 
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->flash = $flash;
         $this->passwordEncoder = $passwordEncoder;
     }
