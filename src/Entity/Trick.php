@@ -13,6 +13,7 @@ use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @ORM\Table(name="trick", indexes={@ORM\Index(columns={"name", "description", "overview"}, flags={"fulltext"})})
  */
 class Trick
 {
