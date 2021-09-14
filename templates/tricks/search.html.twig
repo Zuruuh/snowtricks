@@ -1,3 +1,49 @@
 {% extends "base.html.twig" %}
+{# TODO Implement pagination #}
+{% block title %} Search for a Trick {% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('select') }}
+{% endblock %}
+
 {% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {{form_start(form, {
+                    attr: {
+                        class: "card form-card"
+                    }
+                })}}
+            <h1>Trick Search</h1>
+            <div class="my-2">
+                {{form_row(form.search)}}
+            </div>
+            <div class="my-2">
+                {{form_row(form.category, {
+                    attr: {
+                        class: "form-select",
+                        "data-default": "None"
+                    }
+                })}}
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary mt-1">
+                Search
+            </button>
+            {{form_end(form)}}
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <ul class="list-group tricks-search-preview-list">
+            {% set tabindex = 0 %}
+            {% for trick_element in tricks %}
+            {% embed "components/tricks-preview.html.twig" %}
+            {% set trick = trick_element %}
+            {% set index = tabindex %}
+            {% endembed %}
+            {% set tabindex = tabindex + 1 %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}
