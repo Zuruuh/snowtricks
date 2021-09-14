@@ -9,7 +9,6 @@
 import "./styles/app.scss";
 
 // assets imports
-import headerBackground from "./images/header.jpg";
 
 // bootstrap imports
 import { Tooltip, Toast, Popover, Modal } from "bootstrap";
