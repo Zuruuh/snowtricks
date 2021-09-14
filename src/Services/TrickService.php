@@ -38,7 +38,8 @@ class TrickService
     {
         $slug = strtolower($name);
         $slug = preg_replace('/\s+|\W/', $separator, $slug);
-        $slug = preg_replace('/\-{2,}/', $separator, $slug);
+        $regex = "/\\" . $separator . "{2,}/";
+        $slug = preg_replace($regex, $separator, $slug);
         return trim($slug, $separator);
     }
 
