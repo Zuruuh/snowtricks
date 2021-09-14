@@ -29,7 +29,7 @@ class RegistrationController extends AbstractController
         $this->flash = $flash;
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: 'auth.register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         if ($this->getUser()) {
@@ -83,13 +83,13 @@ class RegistrationController extends AbstractController
         $id = $request->get('id');
 
         if (null === $id) {
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('auth.register');
         }
         
         $user = $userRepository->find($id);
 
         if (null === $user) {
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('auth.register');
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists
@@ -97,7 +97,7 @@ class RegistrationController extends AbstractController
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('auth.register');
         }
         // // / TODO Log user in
         
