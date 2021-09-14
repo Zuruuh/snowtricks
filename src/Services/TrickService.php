@@ -34,12 +34,12 @@ class TrickService
         return $trick->getSlug();
     }
 
-    public function makeSlug(string $name): string
+    public function makeSlug(string $name, string $separator = "-"): string
     {
         $slug = strtolower($name);
-        $slug = preg_replace('/\s+|\W/', '-', $slug);
-        $slug = preg_replace('/\-{2,}/', '-', $slug);
-        return trim($slug, '-');
+        $slug = preg_replace('/\s+|\W/', $separator, $slug);
+        $slug = preg_replace('/\-{2,}/', $separator, $slug);
+        return trim($slug, $separator);
     }
 
     public function createDir(): void
