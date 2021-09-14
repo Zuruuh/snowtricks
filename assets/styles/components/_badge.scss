@@ -10,3 +10,19 @@
     padding: 0.5rem;
   }
 }
+
+.tag {
+  max-width: fit-content;
+  color: #fff;
+  font-size: 1.2rem;
+  text-decoration: none;
+  &-hash {
+    background-color: #3f8bfd;
+    text-decoration: none;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  p {
+    text-decoration: none;
+  }
+}

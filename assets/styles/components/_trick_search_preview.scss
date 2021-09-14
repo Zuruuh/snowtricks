@@ -1,0 +1,177 @@
+// TODO Create animations on click and hover
+
+.tricks-search-preview-list {
+  height: auto;
+  .trick-search-preview {
+    height: auto;
+    position: relative;
+    min-height: 175px;
+    .trick-preview-card-full {
+      display: flex;
+      height: 100%;
+      .trick-card-background {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 33%;
+        overflow: hidden;
+        display: none;
+        @include media-breakpoint-up(md) {
+          display: flex;
+        }
+        .trick-card-image {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-origin: bottom right;
+          transform: scale(1.5);
+        }
+        .trick-card-curve {
+          position: absolute;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          stroke: #fff;
+          fill: #fff;
+          stroke-width: 4px;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .trick-card-infos,
+      .trick-card-dates {
+        @include hidden;
+      }
+      .trick-card-content {
+        flex-grow: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: start;
+        .trick-card-text {
+          flex-grow: 1;
+          * {
+            text-overflow: ellipsis;
+          }
+          a.link-primary {
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+    &:hover {
+      .trick-preview-card-full {
+        .trick-card-background {
+          .trick-card-curve {
+            stroke: #f8f9fa;
+            fill: #f8f9fa;
+          }
+        }
+      }
+    }
+    &:active {
+      .trick-preview-card-full {
+        .trick-card-background {
+          .trick-card-curve {
+            stroke: #e9ecef;
+            fill: #e9ecef;
+          }
+        }
+      }
+    }
+    &:focus {
+      height: auto;
+      padding: 1rem;
+      .trick-preview-card-full {
+        flex-direction: column;
+        height: auto;
+        .trick-card-background {
+          width: 100%;
+          height: 400px;
+          position: relative;
+          .trick-card {
+            &-image {
+              display: block;
+              transform: scale(1);
+              width: 100%;
+              height: 100%;
+              position: relative;
+            }
+            &-curve {
+              @include hidden;
+            }
+          }
+          &:hover {
+            .overlay {
+              @include shown;
+              display: flex;
+            }
+          }
+          .overlay {
+            @include hidden;
+            @include center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            .background-overlay {
+              background-color: rgba(0, 0, 0, 0.5);
+              z-index: 2;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+            }
+            .background-overlay-link {
+              z-index: 3;
+              font-size: 2.5rem;
+              color: #fff;
+              text-decoration: none;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+        .trick-card-content {
+          a.btn.btn-primary {
+            position: relative;
+            left: 50%;
+            @extend .btn-lg;
+            transform: translateX(-50%);
+          }
+        }
+        .trick-card-infos {
+          margin-top: 0.5rem;
+          @include shown;
+          display: flex;
+          flex-direction: column;
+          &-top {
+            display: flex;
+            justify-content: space-between;
+            .trick-card-info-author {
+              display: flex;
+              .trick-card-info-author-picture {
+                width: 4rem;
+                height: 4rem;
+              }
+              .trick-card-info-author-name {
+                margin-right: 0.5rem;
+              }
+            }
+          }
+        }
+        .trick-card-dates {
+          @include shown;
+          display: flex;
+          justify-content: space-between;
+          padding: 0 1rem;
+        }
+      }
+    }
+  }
+}
