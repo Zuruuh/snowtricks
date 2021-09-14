@@ -290,9 +290,9 @@ class TricksController extends AbstractController
                 "author" => [
                     "id" => $trick->getAuthor()->getId(),
                     "username" => $trick->getAuthor()->getUsername(),
-                    "profile_picture" => /*$trick->getAuthor()->getProfilePicture()*/"/static/assets/avatars/default.png",
-                    /* 
-                    TODO Add users profile pictures  */
+                    "profile_picture" => "/static/assets/avatars/default.png",
+                    /* $trick->getAuthor()->getProfilePicture()
+                    TODO Add users profile pictures*/
                 ],
                 "name" => $trick->getName(),
                 "overview" => $trick->getOverview(),
@@ -308,10 +308,4 @@ class TricksController extends AbstractController
             "tricks" => $tricks_list
         ]);
     }
-    
-    // #[Route('/search/query', name: 'search.query')]
-    // public function searchQuery(TrickRepository $repo, Request $request): Response
-    // {
-
-    // }
 }
