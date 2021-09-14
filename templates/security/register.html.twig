@@ -40,9 +40,7 @@
                             class: 'alert alert-danger'
                         }
                     }) }}
-                    {{ form_label(form.plainPassword, {
-                        
-                    })}}
+                    {{ form_label(form.plainPassword)}}
                     <div class="password-field">
                         <i class="password-field-toggler fas fa-eye-slash"></i>
                         {{ form_widget(form.plainPassword, {
@@ -67,7 +65,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button>
                 <div class="mt-2 d-flex justify-content-center">
-                    <a href="{{ path('app_login') }}" class="btn btn-link">Already have an account?</a>
+                    <a href="{{ path('auth.login') }}" class="btn btn-link">Already have an account?</a>
                 </div>
                 {{ form_end(form) }}
             </div>
