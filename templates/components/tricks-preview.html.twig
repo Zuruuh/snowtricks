@@ -1,0 +1,54 @@
+<li id="trick-{{ trick.id }}-preview" tabindex={{ index }}
+    class="list-group-item list-group-item-action trick-search-preview">
+    <div class="trick-preview-card-full">
+        <div class="trick-card-background">
+            <div class="trick-card-image"
+                style="background: url('{{ trick.thumbnail }}') no-repeat center center/cover">
+                <div class="overlay">
+                    <div class="background-overlay"></div>
+                    <a href="{{ path("tricks.details", {slug: trick.slug}) }}"
+                        class="background-overlay-link">{{ trick.name }}</a>
+                </div>
+            </div>
+            <svg class="trick-card-curve">
+                <path d="M21,173 C95,166 166,128 136,-1, L 0 0, L 0 312" />
+            </svg>
+        </div>
+        <div class="trick-card-infos">
+            <div class="trick-card-infos-top">
+                <div class="trick-card-infos-badges">
+                    {% if trick.category is defined %}
+                    {% embed "components/badge.html.twig" %}
+                    {% set link = path('tricks.search', {'category': trick.category.id}) %}
+                    {% set text = trick.category.name %}
+                    {% endembed %}
+                    {% endif %}
+                </div>
+                <div class="trick-card-info-author">
+                    <!-- TODO Add link to user profile -->
+                    <a class="link-primary author" href="#"><span
+                            class="trick-card-info-author-name">{{ trick.author.username }}</span></a>
+                    <img class="rounded-circle border border-1 border-primary trick-card-info-author-picture"
+                        src="{{ trick.author.profile_picture }}" alt="{{ trick.author.username }}'s profile">
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="trick-card-content">
+            <div class="trick-card-text">
+                <a class="link-primary" href={{ path("tricks.details", {slug: trick.slug}) }}>
+                    <h4 class="trick-card-title">{{ trick.name }}</h4>
+                </a>
+                <p class="trick-card-description">{{ trick.overview }}</p>
+            </div>
+            <a href="{{ path("tricks.details", {slug: trick.slug}) }}" class="btn btn-primary">Read more</a>
+        </div>
+        <div class="trick-card-dates">
+            <span class="trick-card-post-date">Post date:
+                <time datetime="{{ trick.post_date }}">{{ trick.post_date }}</time>
+            </span>
+            <span class="trick-card-last-update">Last update:
+                <time datetime="{{ trick.last_update }}">{{ trick.last_update }}</time>
+            </span>
+        </div>
+</li>
