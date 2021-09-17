@@ -14,11 +14,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use App\Repository\TrickRepository;
 use App\Entity\Trick;
+use App\Entity\TrickImages;
+use App\Entity\TrickVideos;
 use App\Service\TrickService;
 use App\Form\TrickFormType;
 
 use App\Entity\Comment;
 use App\Entity\Category;
+use App\Services\PaginationService;
 
 #[Route('/tricks', name: 'tricks.')]
 class TricksController extends AbstractController
@@ -65,9 +68,9 @@ class TricksController extends AbstractController
                 "overview" => $trick->getOverview(),
                 "description" => $trick->getDescription(),
                 "slug" => $trick->getSlug(),
-                "thumbnail" => $trick->getThumbnailPath(),
-                "images" => $trick->getImagesPath(),
-                "videos" => $trick->getVideos(),
+                "thumbnail" => $trick->getThumbnail(),
+                "images" => $trick->getImages(),
+                "videos" => "[]", /* $trick->getVideos() */
                 "created_at" => $created_at->format('Y-m-d H:i:s'),
                 "updated_at" => $last_update->format('Y-m-d H:i:s')
             ]
@@ -95,36 +98,32 @@ class TricksController extends AbstractController
             $trick->setAuthor($this->getUser());
             $trick->setSlug($this->service->makeSlug($trick->getName()));
             $trick_uid = $this->service->saveTrick($trick);
-
+            
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
             if ($thumbnail_data != null) {
                 $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$trick_uid/thumbnail");
-                $trick->setThumbnailPath($path);
+                $trick->setThumbnail($path);
             }
-
+            
             // Validate then save illustration images
             $images_data = $form->get('images')->getData();
             if ($images_data != null) {
-                $path = $this->service->checkAndSaveImages($images_data, $trick_uid);
-                if (!$path) {
-                    return $this->render("tricks/create.html.twig", [
+                if (!$this->service->checkAndSaveImages($images_data, $trick)) {
+                    return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
                 }
-                $trick->setImagesPath($path);
             }
             
             // Validate videos, then save them
             $videos_data = $form->get("videos")->getData();
             if ($videos_data != null) {
-                $videos = $this->service->checkAndSaveVideos($videos_data);
-                if (!$videos) {
-                    return $this->render("tricks/create.html.twig", [
+                if (!$this->service->checkAndSaveVideos($videos_data, $trick)) {
+                    return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
                 }
-                $trick->setVideos($videos);
             }
             
             // Creation is done, redirect user towards new trick's details page
@@ -133,8 +132,27 @@ class TricksController extends AbstractController
             return $this->redirectToRoute('tricks.details', ['slug' => $trick_uid]);
         }
 
-        return $this->render("tricks/create.html.twig", [
+        return $this->render("tricks/form.html.twig", [
             "form" => $form->createView(),
+            "trick_images" => [
+                [
+                    "id" => 1,
+                    "src" => "/static/assets/header.jpg"
+                ],
+                [
+                    "id" => 2,
+                    "src" => "/static/assets/header.jpg"
+                ],
+                [
+                    "id" => 3,
+                    "src" => "/static/assets/header.jpg"
+                ]
+                ],
+            "trick_videos" => [
+                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+                ]
         ]);
     }
 
@@ -173,9 +191,9 @@ class TricksController extends AbstractController
             $images_data = $form->get('images')->getData();
             if ($images_data != null) {
                 $this->service->deleteFile($slug . "/images");
-                $path = $this->service->checkAndSaveImages($images_data, $slug);
+                $path = $this->service->checkAndSaveImages($images_data, $trick);
                 if (!$path) {
-                    return $this->render("tricks/create.html.twig", [
+                    return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
                 }
@@ -185,9 +203,9 @@ class TricksController extends AbstractController
             // Validate videos, then save them
             $videos_data = $form->get("videos")->getData();
             if ($videos_data != null) {
-                $videos = $this->service->checkAndSaveVideos($videos_data);
+                $videos = $this->service->checkAndSaveVideos($videos_data, $trick);
                 if (!$videos) {
-                    return $this->render("tricks/create.html.twig", [
+                    return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
                 }
@@ -198,7 +216,7 @@ class TricksController extends AbstractController
             return $this->redirectToRoute('tricks.details', ['slug' => $this->service->saveTrick($trick)]);
         }
 
-        return $this->render("tricks/create.html.twig", [
+        return $this->render("tricks/form.html.twig", [
             "form" => $form->createView(),
             "videos" => $trick->getVideos(),
         ]);
@@ -269,14 +287,31 @@ class TricksController extends AbstractController
 
         $query = $request->get("query");
         $category = $request->get("category");
+        $page = $request->get("page") ?? 1;
         $tricks = [];
         if ($query || $category) {
             if (!$category) {
                 $category = 0;
             }
+            if (intval($page) <= 0) {
+                $page = 1;
+            }
+            
             $query = preg_replace('/\+{2,}/', "+", $query);
             $query = str_replace("+", " ", $query);
-            $tricks = $repo->search($query, $category);
+            $trick_number = $repo->count(
+                $query,
+                $category,
+                0,
+                0,
+                true
+            );
+            $page_service = new PaginationService();
+            $pagination = $page_service->pagination($trick_number, $page, 10);
+            $pagination_params = $pagination["params"];
+            $pagination_controls = $pagination["controls"];
+
+            $tricks = $repo->search($query, $category, $pagination_params["offset"], $pagination_params["limit"], false);
         }
 
         $tricks_list = [];

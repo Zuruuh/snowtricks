@@ -36,12 +36,12 @@ class Trick
     private $category;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=128, unique=true)
      */
     private $name;
     
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $slug;
     
@@ -56,30 +56,28 @@ class Trick
     private $overview;
     
     // https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-    #[Assert\File(
-        maxSize: "8192k",
-        maxSizeMessage: "Your image is too heavy! Max image size is 8Mb",
-        mimeTypes: ["image/jpeg", "image/png"],
-        mimeTypesMessage: "Please upload a valid image (.jpeg or .png)"
-    )]
-    protected $thumbnail;
+    // #[Assert\File(
+    //     maxSize: "8192k",
+    //     maxSizeMessage: "Your image is too heavy! Max image size is 8Mb",
+    //     mimeTypes: ["image/jpeg", "image/png"],
+    //     mimeTypesMessage: "Please upload a valid image (.jpeg or .png)"
+    // )]
+    // protected $thumbnail;
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $thumbnail_path = "/static/assets/default_thumbnail.png";
-
-    protected $images = [];
-    
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $images_path = [];
+    private $thumbnail = "/static/assets/default_thumbnail.jpg";
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity=TrickVideos::class, mappedBy="trick", orphanRemoval=true)
      */
     private $videos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrickImages::class, mappedBy="trick", orphanRemoval=true)
+     */
+    private $images;
 
     /**
      * @ORM\Column(type="datetime")
@@ -101,6 +99,8 @@ class Trick
         $this->messages    = new ArrayCollection();
         $this->post_date   = new \DateTime();
         $this->last_update = new \DateTime();
+        $this->videos = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,65 +180,29 @@ class Trick
         return $this;
     }
     
-    public function setThumbnail(?File $thumbnail): self
+    public function setThumbnail(?string $thumbnail): self
     {
         $this->thumbnail = $thumbnail;
         
         return $this;
     }
 
-    public function getThumbnail(): ?File
+    public function getThumbnail(): ?string
     {
         return $this->thumbnail;
     }
 
-    public function getThumbnailPath(): ?string
-    {
-        return $this->thumbnail_path;
-    }
+    // public function getThumbnailPath(): ?string
+    // {
+    //     return $this->thumbnail_path;
+    // }
 
-    public function setThumbnailPath(string $thumbnail_path): self
-    {
-        $this->thumbnail_path = $thumbnail_path;
+    // public function setThumbnailPath(string $thumbnail_path): self
+    // {
+    //     $this->thumbnail_path = $thumbnail_path;
 
-        return $this;
-    }
-
-    public function getImages(): ?array
-    {
-        return $this->images;
-    }
-
-    public function setImages(?array $images = []): self
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-    public function getImagesPath(): ?array
-    {
-        return $this->images_path;
-    }
-
-    public function setImagesPath(?array $images_path): self
-    {
-        $this->images_path = $images_path;
-
-        return $this;
-    }
-
-    public function getVideos(): ?string
-    {
-        return $this->videos;
-    }
-
-    public function setVideos($videos): self
-    {
-        $this->videos = $videos;
-
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getPostDate(): ?\DateTimeInterface
     {
@@ -288,6 +252,66 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($message->getPost() === $this) {
                 $message->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickVideos[]
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(TrickVideos $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(TrickVideos $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickImages[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImages(TrickImages $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImages(TrickImages $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
             }
         }
 
