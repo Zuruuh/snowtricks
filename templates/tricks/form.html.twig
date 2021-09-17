@@ -1,0 +1,99 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+{{title|default("Create a new trick")}}
+{% endblock %}
+{% set currentPath = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params')) %}
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('forms') }}
+{#{ encore_entry_script_tags('video-services') }#}
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {{ form_start(form, {
+                attr: {
+                    class: "card form-card"
+                }
+            }) }}
+            <fieldset>{{ form_row(form.name) }} </fieldset>
+            <fieldset>{{ form_row(form.description) }} </fieldset>
+            <fieldset>{{ form_row(form.overview) }} </fieldset>
+            <fieldset>{{ form_row(form.category) }} </fieldset>
+            <fieldset>{{ form_row(form.thumbnail) }} </fieldset>
+            <figure>
+                <img id="trick-thumbnail-preview" src="{{ trick_thumbnail|default("/static/assets/header.jpg")}}">
+                <figcaption>Current thumbnail</figcaption>
+            </figure>
+            <fieldset>{{ form_row(form.images) }} </fieldset>
+            {% if trick_images|default(false) %}
+            <div id="trick-images-carousel-preview" class="carousel slide" data-bs-ride="carousel">
+
+                <div class="carousel-inner">
+                    {% set first = true %}
+                    {% for image in trick_images %}
+                    <div class="carousel-item{% if first %}{% set first = false%} active{% endif %}">
+                        <img src="{{image.src}}" class="d-block w-100">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control carousel-control-prev" type="button"
+                    data-bs-target="#trick-images-carousel-preview" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+
+                <button class="carousel-control carousel-control-next" type="button"
+                    data-bs-target="#trick-images-carousel-preview" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            {% endif %}
+            <fieldset>{{ form_row(form.videos) }} </fieldset>
+            {% if trick_videos|default(false) %}
+            <div id="trick-videos-carousel-preview" class="carousel slide" data-bs-ride="carousel">
+
+                <div class="carousel-inner">
+                    {% set first = true %}
+                    {% for video in trick_videos %}
+                    <div
+                        class="carousel-item{% if first %}{% set first = false%} active{% endif %} video-carousel-item">
+                        {{video|raw}}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control carousel-control-prev" type="button"
+                    data-bs-target="#trick-videos-carousel-preview" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+
+                <button class="carousel-control carousel-control-next" type="button"
+                    data-bs-target="#trick-videos-carousel-preview" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            {% endif %}
+            <!-- 
+            <div class="my-1" id="trick-videos" data-initial-values=''>
+                <div class="d-flex" style="height: 350px; overflow-x:scroll;" id="tricks-videos-scrollable">
+                     Dynamic iframes view here 
+                </div>
+            </div> -->
+            <button type="submit" class="btn btn-primary">
+                {{ currentPath == path('tricks.create') ? 'Create' : 'Save modifications' }}
+            </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
