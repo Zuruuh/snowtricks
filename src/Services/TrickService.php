@@ -5,6 +5,8 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Filesystem\Filesystem;
+use App\Entity\TrickImages;
+use App\Entity\TrickVideos;
 
 use App\Entity\Trick;
 use App\Service\FileService;
@@ -58,8 +60,10 @@ class TrickService
         return $this->fileService->move($file, $path, $file_name);
     }
 
-    public function checkAndSaveImages(array $images_data, string $trick_uid): array
+    public function checkAndSaveImages(array $images_data, Trick $trick): bool
     {
+        $trick_uid = $trick->getSlug();
+
         if (!is_array($images_data)) {
             $images_data = [$images_data];
         }
@@ -92,12 +96,24 @@ class TrickService
             // 3 - Images are valid, save them
             $images_path[] = $this->saveFile($image, "/static/uploads/$trick_uid/images");
         }
-        return $images_path;
+        foreach ($images_path as $image) {
+            $trick_images = new TrickImages();
+            $trick_images->setTrick($trick);
+            $trick_images->setPath($image);
+            $this->em->persist($trick_images);
+            $trick->addImages($trick_images);
+        }
+        $this->em->flush();
+        return true;
     }
 
-    public function checkAndSaveVideos($videos_data)
+    public function checkAndSaveVideos($videos_data, Trick $trick): bool
     {
-        $videos_data = json_decode($videos_data, true);
+        if (!str_contains($videos_data, "iframe")) {
+            return true;
+        }
+        $videos_data = explode('</iframe>', $videos_data);
+        unset($videos_data[count($videos_data) - 1]);
         // 1 - Verify data integrity
         if (!is_array($videos_data)) {
             $this->flash->add("warning", "Please only upload valid videos data");
@@ -109,44 +125,25 @@ class TrickService
             return false;
         }
         // 3 - Validate each video individually
-        $videos = [];
 
-        foreach ($videos_data as $video) {
+        foreach ($videos_data as $video_data) {
             // 3.1 - Check if array has more than 2 properties (id & service)
-            if (sizeof($video) > 2) {
-                $this->flash->add("warning", "Please only upload valid videos data");
-                return false;
-            }
-            
-            // 3.2 - Check if the 2 existing properties are "service" and "id"
-            if (!array_key_exists("id", $video) || !array_key_exists("service", $video)) {
+            $video_data = $video_data . "</iframe>";
+
+            if (str_contains($video_data, 'script>')) {
                 $this->flash->add("warning", "Please only upload valid videos data");
                 return false;
             }
 
-            // 3.3 - Check if id is valid
-            if (strlen($video["id"]) > 16 || strlen($video["id"]) == 0) {
-                $this->flash->add("warning", "Please only upload valid videos data");
-                return false;
-            }
-
-            // 3.4 - Check if service is valid
-            switch (strtolower($video["service"])) {
-                case "youtube":
-                case "dailymotion":
-                case "vimeo":
-                    break;
-                default:
-                    $this->flash->add("warning", "Please only upload valid videos data");
-                    return false;
-                    break;
-            }
-
-            // 3.5 - Add video to array
-            $videos[] = ["service" => $video["service"], "id" => $video["id"]];
-        }
             // 4 - Verifications are done, save videos
-        return json_encode($videos);
+            $video = new TrickVideos();
+            $video->setTrick($trick);
+            $video->setEmbed($video_data);
+            $this->em->persist($video);
+            $trick->addVideo($video);
+        }
+        $this->em->flush();
+        return true;
     }
 
     public function deleteTrick(Trick $trick): void
