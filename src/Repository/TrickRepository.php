@@ -19,7 +19,7 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    public function search(string $keywords = "", int $category = 0, int $offset = 0, int $limit = 10): array
+    public function search(string $keywords = "", int $category = 0, int $offset = 0, int $limit = 0, bool $count = false): array
     {
         // TODO Implement pagination
         $query = $this->createQueryBuilder('t');
@@ -36,13 +36,18 @@ class TrickRepository extends ServiceEntityRepository
                 ->setParameter('category', $category);
         }
 
-        $query->orderBy('t.id', 'DESC');
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
 
-        $results = $query->getQuery()->getResult();
+        $query->setFirstResult($offset)
+            ->orderBy('t.id', 'DESC');
 
-        return $results;
+        $results = $query->getQuery();
+
+        return $count ? $results->getSingleScalarResult() : $results->getResult();
     }
-
+    
     // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */
