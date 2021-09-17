@@ -3,9 +3,6 @@ image: jakzal/phpqa:php8.0
 variables:
   TIMEOUT_SECONDS: 1
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
 before_script:
   - composer install
 
