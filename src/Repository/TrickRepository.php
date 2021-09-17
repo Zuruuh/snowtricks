@@ -19,9 +19,14 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    public function search(string $keywords = "", int $category = 0, int $offset = 0, int $limit = 0, bool $count = false): array
-    {
-        // TODO Implement pagination
+    public function search(
+        string $keywords = "", 
+        int $category = 0, 
+        int $offset = 0, 
+        int $limit = 0, 
+        bool $count = false
+    ): array{
+        // // TODO Implement pagination
         $query = $this->createQueryBuilder('t');
         $query->where("t.id > 1");
         

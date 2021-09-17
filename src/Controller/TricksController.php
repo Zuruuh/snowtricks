@@ -131,34 +131,16 @@ class TricksController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('tricks.details', ['slug' => $trick_uid]);
         }
-
+        
         return $this->render("tricks/form.html.twig", [
-            "form" => $form->createView(),
-            "trick_images" => [
-                [
-                    "id" => 1,
-                    "src" => "/static/assets/header.jpg"
-                ],
-                [
-                    "id" => 2,
-                    "src" => "/static/assets/header.jpg"
-                ],
-                [
-                    "id" => 3,
-                    "src" => "/static/assets/header.jpg"
-                ]
-                ],
-            "trick_videos" => [
-                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                '<iframe width="480" height="360" src="https://www.youtube.com/embed/GMPjNA_fCj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-                ]
+            "form" => $form->createView()
         ]);
     }
 
     #[Route("/edit/{slug}", name: "edit")]
     public function edit(Request $request, string $slug): Response
     {
+        // TODO Display images and videos in carousel preview
         if (!$this->getUser()) {
             $this->flash->add("warning", "You must be logged in to access this page !");
             return $this->redirectToRoute('app_login');
@@ -311,7 +293,13 @@ class TricksController extends AbstractController
             $pagination_params = $pagination["params"];
             $pagination_controls = $pagination["controls"];
 
-            $tricks = $repo->search($query, $category, $pagination_params["offset"], $pagination_params["limit"], false);
+            $tricks = $repo->search(
+                $query, 
+                $category, 
+                $pagination_params["offset"], 
+                $pagination_params["limit"], 
+                false
+            );
         }
 
         $tricks_list = [];

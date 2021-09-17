@@ -32,7 +32,7 @@
             <fieldset>{{ form_row(form.images) }} </fieldset>
             {% if trick_images|default(false) %}
             <div id="trick-images-carousel-preview" class="carousel slide" data-bs-ride="carousel">
-
+                {# TODO UPDATE ON INPUT CAROUSELS AND IMAGE PREVIEW #}
                 <div class="carousel-inner">
                     {% set first = true %}
                     {% for image in trick_images %}

@@ -92,9 +92,9 @@ class SecurityController extends AbstractController
 
             $reset_password_link = $this->generateUrl(
                 'auth.reset_password',
-                 [
+                [
                     "token" => $token
-                ], 
+                ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
             

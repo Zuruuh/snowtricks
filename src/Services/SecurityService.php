@@ -12,7 +12,7 @@ class SecurityService
     private UserPasswordEncoderInterface $passwordEncoder;
 
     public function __construct(
-        FlashBagInterface $flash, 
+        FlashBagInterface $flash,
         UserPasswordEncoderInterface $passwordEncoder
     ) {
         $this->flash = $flash;

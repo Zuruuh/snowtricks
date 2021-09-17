@@ -26,7 +26,7 @@ class TrickFormType extends AbstractType
             ->add('images', FileType::class, [
                 'required' => false,
                 'multiple' => true,
-                'mapped' => false    
+                'mapped' => false
             ])
             ->add('videos', TextareaType::class, [
                 'required' => false,
