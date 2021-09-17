@@ -26,7 +26,7 @@ class Category
     private $creator;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=64, unique=true)
      */
     private $name;
 
