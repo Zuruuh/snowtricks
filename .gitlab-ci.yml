@@ -12,14 +12,34 @@ cache:
     - vendor/
 
 stages:
-  - Security
-  - Quality
+  - Dependencies
+  - Fixes
+  - phplint
+  - TwigLint
 
 security-checker:
-  stage: Security
+  stage: Dependencies
   script:
     - local-php-security-checker composer.lock
   allow_failure: false
+
+composer-unused:
+  stage: Dependencies
+  script:
+    - composer unused
+  allow_failure: false
+
+php-cs-fixer:
+  stage: Fixes
+  script:
+    - php-cs-fixer fix src
+  allow_failure: true
+
+phpa:
+  stage: Quality
+  script:
+    - bin/phpa
+  allow_failure: true
 
 phpcs:
   stage: Quality
@@ -27,10 +47,29 @@ phpcs:
     - phpcs -v --standard=PSR2 --ignore=./src/Kernel.php ./src
   allow_failure: true
 
+phpcs-security-audit:
+  stage: Quality
+  script:
+    - phpcs -v --extensions=php,inc,lib,module,info --standard=Security --ignore=./src/Kernel.php ./src
+  allow_failure: true
+
+phplint:
+  stage: Quality
+  script:
+    - ./bin/phplint --exlude=../src/Kernel.php ../src
+
 phpstan:
   stage: Quality
   script:
     - phpstan analyse ./src
+  allow_failure: true
+
+psalm:
+  stage: Quality
+  script:
+    - psalm-plugin enable weirdan/doctrine-psalm-plugin
+    - psalm-plugin enable weirdan/plugin-symfony
+    - ./vendor/bin/psalm /src/
   allow_failure: true
 
 # code-quality:
@@ -51,7 +90,12 @@ phpstan:
 #   allow_failure: true
 
 twig-lint:
-  stage: Quality
+  stage: TwigLint
   script:
     - twig-lint lint ./templates
   allow_failure: true
+
+twigcs:
+  stage: TwigLint
+  script:
+    - twigcs ./templates
