@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use App\Services\PaginationService;
 
 use App\Form\MessageFormType;
 use App\Entity\Message;
@@ -29,10 +30,46 @@ class MessageController extends AbstractController
     }
 
     #[Route("/", name: "index")]
-    public function index(Request $request): Response
+    public function index(Request $request, PaginationService $page_service): Response
     {
-        //TODO: Implement global chat route here
-        return $this->render('chat/index.html.twig', []);
+        // // TODO: Implement global chat route 
+        $page = $request->get("page", 1);
+        if (intval($page) <= 0) {
+            $page = 1;
+        }
+        
+        $msg_repo = $this->getDoctrine()->getRepository(Message::class);
+        $total = $msg_repo->countPostMessages(0);
+
+        [$controls, $params] = $page_service->paginate(
+            $total,
+            $page,
+            10
+        );
+
+        $messages = $msg_repo->getMessages(0, $params["limit"], $params["offset"]);
+
+        $form = $this->createForm(MessageFormType::class);
+        $form->handleRequest($request);
+
+        if ($this->getUser()) {
+            $message = new Message();
+            $form = $this->createForm(MessageFormType::class, $message);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $message->setAuthor($this->getUser());
+                $message->setContent($form->get('content')->getData());
+                dump($message);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($message);
+                $em->flush();
+            }
+        }
+
+        return $this->render('chat/index.html.twig', [
+            "messages" => $messages ?? null,
+            "pagination" => $controls ?? null,
+        ]);
     }
 
     #[Route("/edit/{id}", name: "edit")]
@@ -74,7 +111,7 @@ class MessageController extends AbstractController
             }
         }
 
-        return $this->render('message/edit.html.twig', [
+        return $this->render('chat/edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
