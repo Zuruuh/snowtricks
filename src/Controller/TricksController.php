@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use \DateTime;
 
 use App\Repository\TrickRepository;
 use App\Entity\Trick;
@@ -18,8 +19,9 @@ use App\Entity\TrickImages;
 use App\Entity\TrickVideos;
 use App\Service\TrickService;
 use App\Form\TrickFormType;
+use App\Form\MessageFormType;
 
-use App\Entity\Comment;
+use App\Entity\Message;
 use App\Entity\Category;
 use App\Services\PaginationService;
 
@@ -45,7 +47,7 @@ class TricksController extends AbstractController
     }
     
     #[Route("/details/{slug}", name: "details")]
-    public function details(string $slug): Response
+    public function details(string $slug, Request $request): Response
     {
         $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $trickRepo->findOneBy(['slug' => $slug]);
@@ -55,6 +57,20 @@ class TricksController extends AbstractController
         }
         $created_at = $trick->getPostDate();
         $last_update = $trick->getLastUpdate();
+
+        if ($this->getUser()) {
+            $message = new Message();
+            $form = $this->createForm(MessageFormType::class, $message);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $message->setPost($trick);
+                $message->setAuthor($this->getUser());
+                $message->setContent($form->get('content')->getData());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($message);
+                $em->flush();
+            }
+        }
 
         return $this->render("tricks/details.html.twig", [
             "trick" => [
@@ -70,9 +86,15 @@ class TricksController extends AbstractController
                 "slug" => $trick->getSlug(),
                 "thumbnail" => $trick->getThumbnail(),
                 "images" => $trick->getImages(),
-                "videos" => "[]", /* $trick->getVideos() */
+                "videos" => $trick->getVideos(),
                 "created_at" => $created_at->format('Y-m-d H:i:s'),
                 "updated_at" => $last_update->format('Y-m-d H:i:s')
+            ],
+            "form" => $this->getUser() ? $form->createView() : null,
+            "user" => [
+                "profile_picture" => $this->getUser()->getProfilePicturePath(),
+                "username" => $this->getUser()->getUsername(),
+                "id" => $this->getUser()->getId()
             ]
         ]);
     }
@@ -193,7 +215,7 @@ class TricksController extends AbstractController
                 }
                 $trick->setVideos($videos);
             }
-            
+            $trick->setLastUpdate(new \DateTime());
             // Creation is done, redirect user towards new trick's details page
             return $this->redirectToRoute('tricks.details', ['slug' => $this->service->saveTrick($trick)]);
         }
