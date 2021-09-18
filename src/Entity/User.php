@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $profile_picture_path = "./public/assets/default.png";
+    private $profile_picture_path = "/static/assets/avatars/default.png";
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="author")

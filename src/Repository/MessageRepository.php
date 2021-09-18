@@ -19,6 +19,37 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
+    public function _count(int $post = 0): int
+    {
+        $query = $this->createQueryBuilder('m');
+
+        $query->select('COUNT(m.id)');
+        if ($post > 0) {
+            $query->where('m.post = :post');
+            $query->setParameter('post', $post);
+        } else {
+            $query->where('m.post is NULL');
+        }
+
+        return (int) $query->getQuery()->getSingleScalarResult();
+    }
+
+    public function getMessages($post = 0, int $limit = 10, int $offset = 0): array
+    {
+        $query = $this->createQueryBuilder('m')
+            ->where('m.id > 0');
+        if ($post > 0) {
+            $query->andWhere('m.post = :post');
+            $query->setParameter('post', $post);
+        } else {
+            $query->andWhere('m.post is NULL');
+        }
+        
+        $query->setMaxResults($limit)
+            ->setFirstResult($offset);
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Message[] Returns an array of Message objects
     //  */

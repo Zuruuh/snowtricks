@@ -47,7 +47,7 @@ class TricksController extends AbstractController
     }
     
     #[Route("/details/{slug}", name: "details")]
-    public function details(string $slug, Request $request): Response
+    public function details(string $slug, Request $request, PaginationService $page_service): Response
     {
         $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $trickRepo->findOneBy(['slug' => $slug]);
@@ -72,30 +72,29 @@ class TricksController extends AbstractController
             }
         }
 
+        $msg_repo = $this->getDoctrine()->getRepository(Message::class);
+
+        $page = (int) $request->query->get('page', 1);
+
+        if ($page <= 0) {
+            $page = 1;
+        }
+        
+        [$controls, $params] = $page_service->paginate(
+            $msg_repo->_count($trick->getId()),
+            $page,
+            10
+        );
+        
+        $messages = $msg_repo->getMessages($trick->getId(), $params["limit"], $params["offset"]);
+        
         return $this->render("tricks/details.html.twig", [
-            "trick" => [
-                "id" => $trick->getId(),
-                "author" => [
-                    "id" => $trick->getAuthor()->getId(),
-                    "username" => $trick->getAuthor()->getUsername(),
-                ],
-                "name" => $trick->getName(),
-                "category" => $trick->getCategory(),
-                "overview" => $trick->getOverview(),
-                "description" => $trick->getDescription(),
-                "slug" => $trick->getSlug(),
-                "thumbnail" => $trick->getThumbnail(),
-                "images" => $trick->getImages(),
-                "videos" => $trick->getVideos(),
-                "created_at" => $created_at->format('Y-m-d H:i:s'),
-                "updated_at" => $last_update->format('Y-m-d H:i:s')
-            ],
+            "trick" => $trick,
+            "created_at" => $created_at->format('Y-m-d H:i:s'),
+            "updated_at" => $last_update->format('Y-m-d H:i:s'),
             "form" => $this->getUser() ? $form->createView() : null,
-            "user" => [
-                "profile_picture" => $this->getUser()->getProfilePicturePath(),
-                "username" => $this->getUser()->getUsername(),
-                "id" => $this->getUser()->getId()
-            ]
+            "messages" => $messages ?? null,
+            "pagination" => $controls ?? null
         ]);
     }
     
@@ -311,9 +310,7 @@ class TricksController extends AbstractController
                 true
             );
             $page_service = new PaginationService();
-            $pagination = $page_service->pagination($trick_number, $page, 10);
-            $pagination_params = $pagination["params"];
-            $pagination_controls = $pagination["controls"];
+            [$pagination_params, $pagination_controls] = $page_service->pagination($trick_number, $page, 10);
 
             $tricks = $repo->search(
                 $query,
