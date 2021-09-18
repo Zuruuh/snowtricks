@@ -30,7 +30,9 @@ composer-unused:
     - "composer \
       --excludeDir=symfony \
       --excludePackage=ext-iconv \
+      --excludePackage=symfony/dotenv \
       --excludePackage=composer/package-version \
+      --excludePackage=symfony/proxy-manager-bridge \
       --excludePackage=icanhazstring/composer-unused \
       unused"
   allow_failure: true
@@ -44,7 +46,10 @@ php-cs-fixer:
 phpa:
   stage: PhpLint
   script:
-    - phpa --exclude=./src/Kernel.php ./src
+    - "phpa \
+      --exclude=./src/Kernel.php \
+      --exclude=./src/Extensions/ \
+      ./src"
   allow_failure: true
 
 phpcs:
