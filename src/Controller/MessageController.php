@@ -21,6 +21,8 @@ class MessageController extends AbstractController
      * - /chat/delete/{id}
      */
 
+    private $flash;
+
     public function __construct(FlashBagInterface $flash)
     {
         $this->flash = $flash;
@@ -30,6 +32,7 @@ class MessageController extends AbstractController
     public function index(Request $request): Response
     {
         //TODO: Implement global chat route here
+        return $this->render('chat/index.html.twig', []);
     }
 
     #[Route("/edit/{id}", name: "edit")]

@@ -20,12 +20,12 @@ class TrickRepository extends ServiceEntityRepository
     }
 
     public function search(
-        string $keywords = "", 
-        int $category = 0, 
-        int $offset = 0, 
-        int $limit = 0, 
+        string $keywords = "",
+        int $category = 0,
+        int $offset = 0,
+        int $limit = 0,
         bool $count = false
-    ): array{
+    ): array {
         // // TODO Implement pagination
         $query = $this->createQueryBuilder('t');
         $query->where("t.id > 1");
