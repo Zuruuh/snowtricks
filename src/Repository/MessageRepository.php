@@ -46,7 +46,8 @@ class MessageRepository extends ServiceEntityRepository
         }
         
         $query->setMaxResults($limit)
-            ->setFirstResult($offset);
+            ->setFirstResult($offset)
+            ->orderBy('m.id', 'DESC');
         return $query->getQuery()->getResult();
     }
 
