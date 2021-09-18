@@ -26,9 +26,9 @@ security-checker:
 composer-unused:
   stage: Dependencies
   script:
-    - composer require icanhazstring/composer-unused
+    - composer require -W icanhazstring/composer-unused
     - composer unused
-  allow_failure: false
+  allow_failure: true
 
 php-cs-fixer:
   stage: Fixes
