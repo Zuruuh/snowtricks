@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
@@ -42,6 +43,12 @@ class Message
      * @ORM\Column(type="datetime")
      */
     private $last_update;
+
+    public function __construct()
+    {
+        $this->post_date = new \DateTime();
+        $this->last_update = new \DateTime();
+    }
 
     public function getId(): ?int
     {
