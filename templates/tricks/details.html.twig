@@ -77,29 +77,10 @@
                             {% endembed %}
                         {% endfor %}
                     </ul>
-                    <nav aria-label="Page Navigation" class="d-flex w-full my-2 justify-content-center">
-                        <ul class="pagination">
-                            {% if pagination.prev == false %}
-                                <li class="page-item disabled">
-                                    <a href="#" tabindex="-1" aria-disabled="true" class="page-link">&lt;&lt;</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a href="{{ path("tricks.details", {slug: trick.slug, page: pagination.prev}) }}" class="page-link">&lt;&lt;</a>
-                                </li>
-                            {% endif %}
-                            <li class="page-item active"><a href="#" class="page-link">{{pagination.current}}</a></li>
-                            {% if pagination.next == false %}
-                                <li class="page-item disabled">
-                                    <a href="#" tabindex="-1" aria-disabled="true" class="page-link">&gt;&gt;</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a href="{{ path("tricks.details", {slug: trick.slug, page: pagination.next}) }}" class="page-link">&gt;&gt;</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
+                    {% embed "components/pagination.html.twig" %}
+                    {% set route = "tricks.details" %}
+                    {% set slug = trick.slug %}
+                    {% endembed %}
                 {% endif %}
             </div>
         </div>
