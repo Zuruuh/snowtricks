@@ -1,0 +1,16 @@
+.message {
+  display: flex;
+  p {
+    flex-grow: 1;
+  }
+  .message-user-info {
+    display: flex;
+    img {
+      width: 64px;
+      height: 64px;
+    }
+    a {
+      margin-left: 0.25rem;
+    }
+  }
+}
