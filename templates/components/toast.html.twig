@@ -1,6 +1,6 @@
 {{ encore_entry_script_tags("toasts") }}
 <div id="toast-display" class="toast-container toast-display">
-    {% for type, messages in flashes %}
+    {% for type, messages in app.session.FlashBag.all() %}
     {% for message in messages %}
     <div class="toast bg-{{ type }} toast--{{ type }} my-1 d-block text-white border-0" role="alert"
         aria-live="assertive" data-bs-delay="10000" aria-atomic="true">

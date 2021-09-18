@@ -40,25 +40,25 @@
                             class: 'alert alert-danger'
                         }
                     }) }}
-                    {{ form_label(form.plainPassword)}}
+                    {{ form_label(form.plainPassword) }}
                     <div class="password-field">
                         <i class="password-field-toggler fas fa-eye-slash"></i>
                         {{ form_widget(form.plainPassword, {
                             attr: {
                                 class: "form-control",
                             }
-                        })}}
+                        }) }}
                     </div>
                 </div>
                 <div class="mb-3 mt-1">
-                    {{ form_errors(form.agreeTerms)}}
+                    {{ form_errors(form.agreeTerms) }}
                     <div class="d-flex align-items-center check-element">
 
                         {{ form_widget(form.agreeTerms, {
                                 attr: {
                                     class: "checkbox me-2",
                                 }
-                            })}}
+                            }) }}
                         <!-- TODO Add terms and conditions link -->
                         <label>Agree with <a href="#">terms</a></label>
                     </div>

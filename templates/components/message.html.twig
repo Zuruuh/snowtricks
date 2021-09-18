@@ -1,0 +1,13 @@
+<li class="list-group-item message">
+    <div class="message-user-info">
+        <img 
+            class="rounded-circle border border-1 border-primary" 
+            src="{{message.author.getProfilePicturePath()}}" 
+            alt="{{message.author.username}}'s profile picture"
+        />
+        <a class="link link-primary" href="#">{{message.author.username}}</a> <!-- TODO add link towards user profile -->
+    </div>
+    <p class="mb-0 ms-2">
+        {{message.content}}
+    </p>
+</li>

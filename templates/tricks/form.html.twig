@@ -1,9 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-{{title|default("Create a new trick")}}
+{{ title|default("Create a new trick") }}
 {% endblock %}
-{% set currentPath = path(app.request.attributes.get('_route'),
+{% set current_path = path(app.request.attributes.get('_route'),
                        app.request.attributes.get('_route_params')) %}
 {% block javascripts %}
 {{ parent() }}
@@ -26,7 +26,7 @@
             <fieldset>{{ form_row(form.category) }} </fieldset>
             <fieldset>{{ form_row(form.thumbnail) }} </fieldset>
             <figure>
-                <img id="trick-thumbnail-preview" src="{{ trick_thumbnail|default("/static/assets/header.jpg")}}">
+                <img id="trick-thumbnail-preview" src="{{ trick_thumbnail|default("/static/assets/header.jpg") }}">
                 <figcaption>Current thumbnail</figcaption>
             </figure>
             <fieldset>{{ form_row(form.images) }} </fieldset>
@@ -36,8 +36,8 @@
                 <div class="carousel-inner">
                     {% set first = true %}
                     {% for image in trick_images %}
-                    <div class="carousel-item{% if first %}{% set first = false%} active{% endif %}">
-                        <img src="{{image.src}}" class="d-block w-100">
+                    <div class="carousel-item{% if first %} {% set first = false %} active {% endif %}">
+                        <img src="{{ image.src }}" class="d-block w-100">
                     </div>
                     {% endfor %}
                 </div>
@@ -63,8 +63,8 @@
                     {% set first = true %}
                     {% for video in trick_videos %}
                     <div
-                        class="carousel-item{% if first %}{% set first = false%} active{% endif %} video-carousel-item">
-                        {{video|raw}}
+                        class="carousel-item{% if first %}{% set first = false %} active{% endif %} video-carousel-item">
+                        {{ video|raw }}
                     </div>
                     {% endfor %}
                 </div>
@@ -82,14 +82,14 @@
                 </button>
             </div>
             {% endif %}
-            <!-- 
+            <!--
             <div class="my-1" id="trick-videos" data-initial-values=''>
                 <div class="d-flex" style="height: 350px; overflow-x:scroll;" id="tricks-videos-scrollable">
-                     Dynamic iframes view here 
+                     Dynamic iframes view here
                 </div>
             </div> -->
             <button type="submit" class="btn btn-primary">
-                {{ currentPath == path('tricks.create') ? 'Create' : 'Save modifications' }}
+                {{ current_path == path('tricks.create') ? 'Create' : 'Save modifications' }}
             </button>
             {{ form_end(form) }}
         </div>

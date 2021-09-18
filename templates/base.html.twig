@@ -14,7 +14,6 @@
 <body>
     {% include "layout/nav.html.twig" %}
     {% embed "./components/toast.html.twig" %}
-    {% set flashes = app.session.FlashBag.all() %}
     {% endembed %}
     <main class="min-page-height" style="padding-bottom:120px">
         {% block body %}{% endblock %}
