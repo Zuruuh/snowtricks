@@ -28,8 +28,8 @@
             {% endif %}
         </div>
         <div class="scrollable-container">
-            <div class="trick-scrollable scrollable" data-videos="{{trick.videos}}"
-                data-images="{{trick.images | join("|")}}">
+            <div class="trick-scrollable scrollable" data-videos="{#{trick.videos}#}"
+                data-images="{#{trick.images | join("|")}#}">
             </div>
         </div>
         <div class="container">
@@ -44,10 +44,29 @@
                         <li class="trick-badge bg-primary">Last modification: <span>{{trick.updated_at}}</span></li>
                     </ul>
                 </div>
-                <hr>
             </div>
             <div class="trick-comments">
-                <!-- TODO Display comment form if user is logged in -->
+                <!-- // TODO Display comment form if user is logged in -->
+                {% if app.user %}
+                    <hr>
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_errors(form.content) }}
+                    <div class="form-floating my-2">
+                        {{ form_widget(form.content, {
+                            attr: {
+                                placeholder: "Write a comment..",
+                                class: "form-control",
+                                style: "min-height: 75px"
+                            }
+                        }) }}
+                        {{ form_label(form.content) }}
+                    </div>
+                    <div class="my-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-lg btn-primary">Post comment</button>
+                    </div>
+                {{ form_end(form) }}
+                {% endif %}
                 <!-- TODO Display trick's comments and paginate them -->
             </div>
         </div>
