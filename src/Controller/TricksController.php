@@ -316,10 +316,10 @@ class TricksController extends AbstractController
             $pagination_controls = $pagination["controls"];
 
             $tricks = $repo->search(
-                $query, 
-                $category, 
-                $pagination_params["offset"], 
-                $pagination_params["limit"], 
+                $query,
+                $category,
+                $pagination_params["offset"],
+                $pagination_params["limit"],
                 false
             );
         }
