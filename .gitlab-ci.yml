@@ -14,7 +14,7 @@ cache:
 stages:
   - Dependencies
   - Fixes
-  - Phplint
+  - PhpLint
   - TwigLint
 
 security-checker:
