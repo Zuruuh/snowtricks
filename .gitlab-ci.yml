@@ -27,11 +27,12 @@ composer-unused:
   stage: Dependencies
   script:
     - composer require -W icanhazstring/composer-unused
-    - "composer unused \
+    - "composer \
       --excludeDir=symfony \
       --excludePackage=ext-iconv \
       --excludePackage=composer/package-version \
-      --excludePackage=icanhazstring/composer-unused"
+      --excludePackage=icanhazstring/composer-unused \
+      unused"
   allow_failure: true
 
 php-cs-fixer:
@@ -43,7 +44,7 @@ php-cs-fixer:
 phpa:
   stage: PhpLint
   script:
-    - phpa --exclude=/src/Kernel.php /src
+    - phpa --exclude=./src/Kernel.php ./src
   allow_failure: true
 
 phpcs:
@@ -61,22 +62,13 @@ phpcs-security-audit:
 phplint:
   stage: PhpLint
   script:
-    - phplint --exclude=../src/Kernel.php ../src
+    - phplint --exclude=./src/Kernel.php ./src
   allow_failure: true
 
 phpstan:
   stage: PhpLint
   script:
     - phpstan analyse ./src
-  allow_failure: true
-
-psalm:
-  stage: PhpLint
-  script:
-    - composer require weirdan/doctrine-psalm-plugin weirdan/plugin-symfony
-    - psalm-plugin enable weirdan/doctrine-psalm-plugin
-    - psalm-plugin enable weirdan/plugin-symfony
-    - psalm
   allow_failure: true
 
 # code-quality:
