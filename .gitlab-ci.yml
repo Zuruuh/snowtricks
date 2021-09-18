@@ -4,6 +4,7 @@ variables:
   TIMEOUT_SECONDS: 1
 
 before_script:
+  - composer --version
   - composer install
 
 cache:
@@ -39,9 +40,9 @@ code-quality:
     DOCKER_DRIVER: overlay
   services:
     - docker:dind
+    - composer:latest
   script:
     - docker pull codeclimate/codeclimate
-    - docker pull jakzal/phpqa:php8.0
     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate init
     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -f json > codeclimate.json
   artifacts:
