@@ -26,6 +26,7 @@ security-checker:
 composer-unused:
   stage: Dependencies
   script:
+    - composer require icanhazstring/composer-unused
     - composer unused
   allow_failure: false
 
