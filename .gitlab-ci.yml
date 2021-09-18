@@ -14,7 +14,7 @@ cache:
 stages:
   - Dependencies
   - Fixes
-  - phplint
+  - Phplint
   - TwigLint
 
 security-checker:
@@ -36,36 +36,36 @@ php-cs-fixer:
   allow_failure: true
 
 phpa:
-  stage: Quality
+  stage: PhpLint
   script:
     - bin/phpa
   allow_failure: true
 
 phpcs:
-  stage: Quality
+  stage: PhpLint
   script:
     - phpcs -v --standard=PSR2 --ignore=./src/Kernel.php ./src
   allow_failure: true
 
 phpcs-security-audit:
-  stage: Quality
+  stage: PhpLint
   script:
     - phpcs -v --extensions=php,inc,lib,module,info --standard=Security --ignore=./src/Kernel.php ./src
   allow_failure: true
 
 phplint:
-  stage: Quality
+  stage: PhpLint
   script:
     - ./bin/phplint --exlude=../src/Kernel.php ../src
 
 phpstan:
-  stage: Quality
+  stage: PhpLint
   script:
     - phpstan analyse ./src
   allow_failure: true
 
 psalm:
-  stage: Quality
+  stage: PhpLint
   script:
     - psalm-plugin enable weirdan/doctrine-psalm-plugin
     - psalm-plugin enable weirdan/plugin-symfony
@@ -74,7 +74,7 @@ psalm:
 
 # code-quality:
 #   image: docker:latest
-#   stage: Quality
+#   stage: PhpLint
 #   variables:
 #     DOCKER_DRIVER: overlay
 #   services:
