@@ -251,7 +251,7 @@ class TricksController extends AbstractController
     }
     
     #[Route('/search', name: 'search')]
-    public function search(TrickRepository $repo, Request $request): Response
+    public function search(TrickRepository $repo, Request $request, PaginationService $page_service): Response
     {
         $form = $this->createFormBuilder([])
         ->add('search', SearchType::class, [
@@ -290,7 +290,7 @@ class TricksController extends AbstractController
 
         $query = $request->get("query");
         $category = $request->get("category");
-        $page = $request->get("page") ?? 1;
+        $page = $request->get("page", 1);
         $tricks = [];
         if ($query || $category) {
             if ((bool) !$category) {
@@ -309,7 +309,6 @@ class TricksController extends AbstractController
                 0,
                 true
             );
-            $page_service = new PaginationService();
             [$controls, $params] = $page_service->paginate($trick_number, $page, 10);
 
             $tricks = $repo->search(
