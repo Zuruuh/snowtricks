@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a message{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+        {% embed "message/form.html.twig" %}
+        {% set form_title = "Edit a comment" %}
+        {% set button_text = "Save modifications" %}
+        {% endembed %}
+        </div>
+    </div>
+</div>
+{% endblock %}
