@@ -38,9 +38,9 @@ class MessageController extends AbstractController
     #[Route("/edit/{id}", name: "edit")]
     public function edit(Request $request): Response
     {
-        $id = $request->attributes->get('id');
+        $id = $request->attributes->get('id', 0);
 
-        if (!$id) {
+        if ((bool) !$id) {
             $this->flash->add('error', 'You must provide your message id in the url');
             return $this->redirectToRoute('chat.index');
         }
@@ -48,12 +48,12 @@ class MessageController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Message::class);
         $message = $repo->find($id);
 
-        if (!$message) {
+        if ((bool) !$message) {
             $this->flash->add('error', 'This message does not exist');
             return $this->redirectToRoute('chat.index');
         }
 
-        if ($message->getAuthor() !== $this->getUser()) {
+        if ((int) $message->getAuthor()->getId() !== (int) $this->getUser()->getId()) {
             $this->flash->add('error', 'You are not allowed to edit this message');
             return $this->redirectToRoute('chat.index');
         }

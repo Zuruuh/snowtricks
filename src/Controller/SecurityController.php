@@ -81,7 +81,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $username = $form->getData()["username"];
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["username" => $username]);
-            if (!$user) {
+            if ((bool) !$user) {
                 $this->flash->add("warning", "This username is not in use");
                 return $this->redirectToRoute('auth.forgot_password');
             }
@@ -132,7 +132,7 @@ class SecurityController extends AbstractController
         $service = new \App\Service\SecurityService($this->flash, $passwordEncoder);
         $user = $service->checkToken($token, $user_repo);
         
-        if (!$user) {
+        if ((bool) !$user) {
             return $this->redirectToRoute('auth.forgot_password');
         }
 

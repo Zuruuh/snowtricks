@@ -25,12 +25,12 @@ class TrickRepository extends ServiceEntityRepository
         int $offset = 0,
         int $limit = 0,
         bool $count = false
-    ): array {
+    ): array|int {
         // // TODO Implement pagination
         $query = $this->createQueryBuilder('t');
         $query->where("t.id > 1");
         
-        if ($keywords !== "") {
+        if ((bool) !$keywords) {
             $query->andWhere('MATCH (t.name, t.description, t.overview) AGAINST (:keywords boolean) > 0')
                 ->setParameter('keywords', $keywords);
         }
@@ -48,9 +48,9 @@ class TrickRepository extends ServiceEntityRepository
         $query->setFirstResult($offset)
             ->orderBy('t.id', 'DESC');
 
-        $results = $query->getQuery();
+        $results = $query->getQuery()->getResult();
 
-        return $count ? $results->getSingleScalarResult() : $results->getResult();
+        return $count ? sizeof($results) : $results;
     }
     
     // /**

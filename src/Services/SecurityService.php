@@ -35,7 +35,7 @@ class SecurityService
 
         $token = explode(";", $token);
         // 3 Verify if token is still valid after array separation
-        if (sizeof($token) != 3) {
+        if ((int) sizeof($token) !== 3) {
             $this->flash->add("warning", "Invalid token");
             return false;
         }
@@ -48,13 +48,13 @@ class SecurityService
 
         // 5 Verify if user exists
         $user = $repo->findOneBy(["id" => $token[2]]);
-        if (!$user) {
+        if ((bool) !$user) {
             $this->flash->add("warning", "Invalid token");
             return false;
         }
         
         // 6 Verify if password is correct
-        if ($user->getPassword() != $token[0]) {
+        if ((string) $user->getPassword() !== (string) $token[0]) {
             $this->flash->add("warning", "Invalid token");
             return false;
         }

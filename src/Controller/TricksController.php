@@ -51,7 +51,7 @@ class TricksController extends AbstractController
     {
         $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $trickRepo->findOneBy(['slug' => $slug]);
-        if (!$trick) {
+        if ((bool) !$trick) {
             $this->flash->add("warning", "This trick does not exist !");
             return $this->redirectToRoute("home.index");
         }
@@ -81,7 +81,7 @@ class TricksController extends AbstractController
         }
         
         [$controls, $params] = $page_service->paginate(
-            $msg_repo->_count($trick->getId()),
+            $msg_repo->countPostMessages($trick->getId()),
             $page,
             10
         );
@@ -122,14 +122,14 @@ class TricksController extends AbstractController
             
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
-            if ($thumbnail_data != null) {
+            if ((bool) !$thumbnail_data) {
                 $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$trick_uid/thumbnail");
                 $trick->setThumbnail($path);
             }
             
             // Validate then save illustration images
             $images_data = $form->get('images')->getData();
-            if ($images_data != null) {
+            if ((bool) !$images_data) {
                 if (!$this->service->checkAndSaveImages($images_data, $trick)) {
                     return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
@@ -139,7 +139,7 @@ class TricksController extends AbstractController
             
             // Validate videos, then save them
             $videos_data = $form->get("videos")->getData();
-            if ($videos_data != null) {
+            if ((bool) !$videos_data) {
                 if (!$this->service->checkAndSaveVideos($videos_data, $trick)) {
                     return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
@@ -169,7 +169,7 @@ class TricksController extends AbstractController
         
         $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $trickRepo->findOneBy(['slug' => $slug]);
-        if (!$trick) {
+        if ((bool) !$trick) {
             $this->flash->add("warning", "This trick does not exist !");
             return $this->redirectToRoute("home.index");
         }
@@ -184,7 +184,7 @@ class TricksController extends AbstractController
             
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
-            if ($thumbnail_data != null) {
+            if ((bool) !$thumbnail_data) {
                 $this->service->deleteFile($slug . "/thumbnail");
                 $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$slug/thumbnail");
                 $trick->setThumbnailPath($path);
@@ -192,10 +192,10 @@ class TricksController extends AbstractController
             
             // Validate then save illustration images
             $images_data = $form->get('images')->getData();
-            if ($images_data != null) {
+            if ((bool) !$images_data) {
                 $this->service->deleteFile($slug . "/images");
                 $path = $this->service->checkAndSaveImages($images_data, $trick);
-                if (!$path) {
+                if ((bool) !$path) {
                     return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
@@ -205,9 +205,9 @@ class TricksController extends AbstractController
             
             // Validate videos, then save them
             $videos_data = $form->get("videos")->getData();
-            if ($videos_data != null) {
+            if ((bool) !$videos_data) {
                 $videos = $this->service->checkAndSaveVideos($videos_data, $trick);
-                if (!$videos) {
+                if ((bool) !$videos) {
                     return $this->render("tricks/form.html.twig", [
                         "form" => $form->createView()
                     ]);
@@ -236,7 +236,7 @@ class TricksController extends AbstractController
         $trickRepo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $trickRepo->findOneBy(['slug' => $slug]);
         
-        if (!$trick) {
+        if ((bool) !$trick) {
             $this->flash->add("warning", "This trick does not exist !");
             return $this->redirectToRoute("home.index");
         }
@@ -293,7 +293,7 @@ class TricksController extends AbstractController
         $page = $request->get("page") ?? 1;
         $tricks = [];
         if ($query || $category) {
-            if (!$category) {
+            if ((bool) !$category) {
                 $category = 0;
             }
             if (intval($page) <= 0) {
@@ -302,7 +302,7 @@ class TricksController extends AbstractController
             
             $query = preg_replace('/\+{2,}/', "+", $query);
             $query = str_replace("+", " ", $query);
-            $trick_number = $repo->count(
+            $trick_number = $repo->search(
                 $query,
                 $category,
                 0,
@@ -310,13 +310,13 @@ class TricksController extends AbstractController
                 true
             );
             $page_service = new PaginationService();
-            [$pagination_params, $pagination_controls] = $page_service->pagination($trick_number, $page, 10);
+            [$controls, $params] = $page_service->paginate($trick_number, $page, 10);
 
             $tricks = $repo->search(
                 $query,
                 $category,
-                $pagination_params["offset"],
-                $pagination_params["limit"],
+                $params["offset"],
+                $params["limit"],
                 false
             );
         }

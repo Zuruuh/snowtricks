@@ -19,7 +19,7 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    public function _count(int $post = 0): int
+    public function countPostMessages(int $post = 0): int
     {
         $query = $this->createQueryBuilder('m');
 
