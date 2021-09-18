@@ -39,7 +39,7 @@ php-cs-fixer:
 phpa:
   stage: PhpLint
   script:
-    - bin/phpa
+    - phpa
   allow_failure: true
 
 phpcs:
@@ -57,7 +57,8 @@ phpcs-security-audit:
 phplint:
   stage: PhpLint
   script:
-    - ./bin/phplint --exlude=../src/Kernel.php ../src
+    - phplint --exlude=../src/Kernel.php ../src
+  allow_failure: true
 
 phpstan:
   stage: PhpLint
@@ -70,7 +71,7 @@ psalm:
   script:
     - psalm-plugin enable weirdan/doctrine-psalm-plugin
     - psalm-plugin enable weirdan/plugin-symfony
-    - ./vendor/bin/psalm /src/
+    - psalm
   allow_failure: true
 
 # code-quality:
