@@ -26,7 +26,7 @@ class TrickVideos
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $embed;
+    private $url;
 
     public function getId(): ?int
     {
@@ -45,14 +45,14 @@ class TrickVideos
         return $this;
     }
 
-    public function getEmbed(): ?string
+    public function getUrl(): ?string
     {
-        return $this->embed;
+        return $this->url;
     }
 
-    public function setEmbed(string $embed): self
+    public function setUrl(string $url): self
     {
-        $this->embed = $embed;
+        $this->url = $url;
 
         return $this;
     }
