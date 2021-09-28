@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\Email(groups={"registration"})
+     * @Assert\Email(groups={"registration"}, message="This email is not valid")
      * @Assert\Unique(groups={"registration"}, message="This email address is already in use.")
      */
     private $email;
