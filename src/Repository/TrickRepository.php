@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,11 +27,10 @@ class TrickRepository extends ServiceEntityRepository
         int $limit = 0,
         bool $count = false
     ): array|int {
-        // // TODO Implement pagination
         $query = $this->createQueryBuilder('t');
         $query->where("t.id > 1");
         
-        if ((bool) !$keywords) {
+        if (!$keywords) {
             $query->andWhere('MATCH (t.name, t.description, t.overview) AGAINST (:keywords boolean) > 0')
                 ->setParameter('keywords', $keywords);
         }
@@ -51,6 +51,16 @@ class TrickRepository extends ServiceEntityRepository
         $results = $query->getQuery()->getResult();
 
         return $count ? sizeof($results) : $results;
+    }
+
+    public function countUserTricks(User $user): int
+    {
+        $query = $this->createQueryBuilder('t');
+        $query->select('COUNT(t.id)')
+            ->where('t.author = :author')
+            ->setParameter('author', $user);
+        
+        return $query->getQuery()->getSingleScalarResult();
     }
     
     // /**
