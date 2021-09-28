@@ -153,7 +153,6 @@ class SecurityController extends AbstractController
                 new Length([
                     'min' => 6,
                     'minMessage' => 'Your password should be at least {{ limit }} characters',
-                    // max length allowed by Symfony for security reasons
                     'max' => 4096,
                 ]),
             ],
