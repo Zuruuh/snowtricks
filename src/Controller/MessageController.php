@@ -32,7 +32,6 @@ class MessageController extends AbstractController
     #[Route("/", name: "index")]
     public function index(Request $request, PaginationService $page_service): Response
     {
-        // // TODO: Implement global chat route 
         $page = $request->get("page", 1);
         if (intval($page) <= 0) {
             $page = 1;
@@ -59,14 +58,15 @@ class MessageController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $message->setAuthor($this->getUser());
                 $message->setContent($form->get('content')->getData());
-                dump($message);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($message);
                 $em->flush();
+                return $this->redirectToRoute('chat.index');
             }
         }
 
         return $this->render('chat/index.html.twig', [
+            "form" => $form->createView(),
             "messages" => $messages ?? null,
             "pagination" => $controls ?? null,
         ]);
@@ -114,5 +114,39 @@ class MessageController extends AbstractController
         return $this->render('chat/edit.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route("/delete/{id}", name: "delete")]
+    public function delete(Request $request): Response
+    {
+        $id = $request->attributes->get('id', 0);
+
+        if ((bool) !$id) {
+            $this->flash->add('error', 'You must provide your message id in the url');
+            return $this->redirectToRoute('chat.index');
+        }
+        
+        $repo = $this->getDoctrine()->getRepository(Message::class);
+        $message = $repo->find($id);
+
+        if ((bool) !$message) {
+            $this->flash->add('error', 'This message does not exist');
+            return $this->redirectToRoute('chat.index');
+        }
+        
+        if ((int) $message->getAuthor()->getId() !== (int) $this->getUser()->getId()) {
+            $this->flash->add('error', 'You are not allowed to delete this message');
+            return $this->redirectToRoute('chat.index');
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $trick = $message->getPost();
+        $em->remove($message);
+        $em->flush();
+        $this->flash->add('success', 'Your message has been deleted !');
+        if ($trick) {
+            return $this->redirectToRoute('tricks.details', ['slug' => $trick->getSlug()]);
+        }
+        return $this->redirectToRoute('chat.index');
     }
 }
