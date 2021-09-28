@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% if app.user.id == user.id %}
+{% set profile = "My Profile" %}
+{% else %}
+{% set profile = user.username ~ "'s profile" %}
+{% endif %}
+
+{% block title %}{{profile}}{% endblock %}
+{% block body %}
+
+{# {{dump(user)}} #}
+
+<div class="container">
+    <h2 class="h1">{{profile}}</h2>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="my-2">
+                <img src="{{ profile_picture }}" alt="{{ user.username }}" style="width: 250px; height: 250px" class="rounded-circle" />
+            </div>
+        </div>
+        <div class="col-md-7">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action">Has created {{ tricks_count }} tricks</li>
+                <li class="list-group-item list-group-item-action">Has sent a total of {{ messages_count }} messages</li>
+                <li class="list-group-item list-group-item-action">Joined the community the {{ user.registerDate|date("d/m/Y") }}</li>
+            </ul>
+            {% if app.user.id == user.id %}
+            <div class="m-2 p-2 d-flex justify-content-center">
+                <a href="{{ path("user.edit") }}" class="btn btn-primary"><i class="fas fa-pen"></i>&nbsp;Edit my profile</a>
+            </div>
+            {% endif %}              
+        </div>
+</div>
+
+{% endblock %}
