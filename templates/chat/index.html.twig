@@ -2,6 +2,11 @@
 
 {% block title %}Global chat{% endblock %}
 
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('message') }}
+{% endblock %}
+
 {% block body %}
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -23,7 +28,7 @@
         {% endif %}
         </div>
     </div>
-    <section id="messages">
+    <section id="messages" class="mt-4">
         <div class="container">
             <ul class="list-group">
                 {% for message in messages %}
