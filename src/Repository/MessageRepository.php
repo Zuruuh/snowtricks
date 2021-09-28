@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Message;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -49,6 +50,16 @@ class MessageRepository extends ServiceEntityRepository
             ->setFirstResult($offset)
             ->orderBy('m.id', 'DESC');
         return $query->getQuery()->getResult();
+    }
+
+    public function countUserMessages(User $user): int
+    {
+        $query = $this->createQueryBuilder('m');
+        $query->select('COUNT(m.id)')
+            ->where('m.author = :author')
+            ->setParameter('author', $user);
+        
+        return $query->getQuery()->getSingleScalarResult();
     }
 
     // /**
