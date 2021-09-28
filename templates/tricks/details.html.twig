@@ -2,6 +2,7 @@
 {% block javascripts %}
 {{ parent() }}
 {{ encore_entry_script_tags('scrollable') }}
+{{ encore_entry_script_tags('message') }}
 {% endblock %}
 {% block body %}
 {% embed "./components/modal.html.twig" %}
@@ -19,7 +20,6 @@
             <h1 id="header-title">{{ trick.name }}</h1>
             {% if is_granted('ROLE_USER') %}
             <div class="component-actions trick-header-actions">
-                <!-- // / TODO Create edit and delete path -->
                 <a href="{{ path("tricks.edit", {slug: trick.slug}) }}"><i class="fas fa-pen"></i></a>
                 <button class="components-action-delete" data-bs-toggle="modal" data-bs-target="#page-modal"
                     data-delete-link="{{ path("tricks.delete", { "slug": trick.slug }) }}"><i
@@ -46,7 +46,6 @@
                 </div>
             </div>
             <div class="trick-comments">
-                <!-- // TODO Display comment form if user is logged in -->
                 {% if app.user %}
                     <hr>
                     {{ form_start(form) }}
@@ -67,7 +66,6 @@
                     </div>
                     {{ form_end(form) }}
                 {% endif %}
-                <!-- TODO Display trick's comments and paginate them -->
                 {% if messages %}
                     <hr>
                     <ul class="list-group">
