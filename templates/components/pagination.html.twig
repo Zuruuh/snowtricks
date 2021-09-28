@@ -9,7 +9,7 @@
                 <a href="{{ path(route, {slug: slug|default(null), page: pagination.prev}) }}" class="page-link">&lt;&lt;</a>
             </li>
         {% endif %}
-        <li class="page-item active"><a href="#" class="page-link">{{pagination.current}}</a></li>
+        <li class="page-item active"><a href="#" class="page-link">{{ pagination.current }}</a></li>
         {% if pagination.next == false %}
             <li class="page-item disabled">
                 <a href="#" tabindex="-1" aria-disabled="true" class="page-link">&gt;&gt;</a>
