@@ -39,12 +39,15 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - { path: ^/tricks, roles: PUBLIC_ACCESS }
     - { path: ^/tricks/create, roles: ROLE_USER }
     - { path: ^/tricks/edit, roles: ROLE_USER }
     - { path: ^/tricks/delete, roles: ROLE_USER }
+    - { path: ^/logout, roles: ROLE_USER }
+    - { path: ^/user/me, roles: ROLE_USER }
+    - { path: ^/user/edit, roles: ROLE_USER }
+    - { path: ^/user/profile, roles: PUBLIC_ACCESS }
+    - { path: ^/tricks, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/register, roles: PUBLIC_ACCESS }
     - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
     - { path: ^/reset-password, roles: PUBLIC_ACCESS }
-    - { path: ^/logout, roles: ROLE_USER }
