@@ -39,12 +39,20 @@ class RegistrationController extends AbstractController
         $user = new User();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(RegistrationFormType::class, $user);
+        $repo = $this->getDoctrine()->getRepository(User::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user = $form->getData();
             
+            if ($repo->findOneBy(["email" => $user->getEmail()])) {
+                $this->flash->add(
+                    "danger",
+                    "This email is already in use"
+                );
+                return $this->redirectToRoute('auth.register');
+            }
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
