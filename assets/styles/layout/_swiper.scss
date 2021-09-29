@@ -1,0 +1,14 @@
+.swiper {
+  margin-top: 1rem;
+  max-width: 100%;
+  max-height: 200px;
+  .swiper-slide {
+    width: 355px;
+    height: 200px;
+    div,
+    img {
+      max-height: 200px;
+      max-width: 355px;
+    }
+  }
+}
