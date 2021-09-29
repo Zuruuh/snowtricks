@@ -40,7 +40,8 @@ Now, you'll have to setup the database. Run the following commands (make sure to
 ```bash
 docker-compose up -d
 php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
+php bin/console d:m:m
+php bin/console d:f:l
 ```
 
 Once this is done, you can start the local server using this command:
