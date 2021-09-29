@@ -69,6 +69,7 @@ class TricksController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($message);
                 $em->flush();
+                return $this->redirectToRoute("tricks.details", ['slug' => $slug]);
             }
         }
 
@@ -90,8 +91,8 @@ class TricksController extends AbstractController
         
         return $this->render("tricks/details.html.twig", [
             "trick" => $trick,
-            "created_at" => $created_at->format('d/m/Y H:i:s'),
-            "updated_at" => $last_update->format('d/m/Y H:i:s'),
+            "created_at" => $created_at->format('\T\h\e\ d/m/Y \a\t H:i:s'),
+            "updated_at" => $last_update->format('\T\h\e\ d/m/Y \a\t H:i:s'),
             "form" => $this->getUser() ? $form->createView() : null,
             "messages" => $messages ?? null,
             "pagination" => $controls ?? null
@@ -119,31 +120,27 @@ class TricksController extends AbstractController
             $trick->setAuthor($this->getUser());
             $trick->setSlug($this->service->makeSlug($trick->getName()));
             $trick_uid = $this->service->saveTrick($trick);
-            
+
             // Save Thumbnail
             $thumbnail_data = $form->get('thumbnail')->getData();
-            if (!$thumbnail_data) {
+            if ($thumbnail_data) {
                 $path = $this->service->saveFile($thumbnail_data, "/static/uploads/$trick_uid/thumbnail");
                 $trick->setThumbnail($path);
             }
             
             // Validate then save illustration images
             $images_data = $form->get('images')->getData();
-            if (!$images_data) {
+            if ($images_data) {
                 if (!$this->service->checkAndSaveImages($images_data, $trick)) {
-                    return $this->render("tricks/form.html.twig", [
-                        "form" => $form->createView()
-                    ]);
+                    return $this->redirectToRoute("tricks.create");
                 }
             }
             
             // Validate videos, then save them
             $videos_data = $form->get("videos")->getData();
-            if (!$videos_data) {
+            if ($videos_data) {
                 if (!$this->service->checkAndSaveVideos($videos_data, $trick)) {
-                    return $this->render("tricks/form.html.twig", [
-                        "form" => $form->createView()
-                    ]);
+                    return $this->redirectToRoute("tricks.create");
                 }
             }
             
