@@ -23,10 +23,10 @@ Encore
   .addEntry("app", "./assets/app.js")
   .addEntry("forms", "./assets/scripts/components/forms.js")
   .addEntry("toasts", "./assets/scripts/components/toasts.js")
-  .addEntry("video-services", "./assets/scripts/components/video-service.js")
-  .addEntry("scrollable", "./assets/scripts/components/scroller.js")
   .addEntry("select", "./assets/scripts/components/select.js")
   .addEntry("message", "./assets/scripts/components/message.js")
+  .addEntry("player", "./assets/scripts/components/player.js")
+  .addEntry("dynamic-forms", "./assets/scripts/components/dynamic-forms.js")
   .addEntry("image-preview", "./assets/scripts/components/update-image.js")
 
   // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
