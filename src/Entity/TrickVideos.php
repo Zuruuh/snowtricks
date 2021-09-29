@@ -28,6 +28,15 @@ class TrickVideos
      */
     private $url;
 
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $provider;
+
+    public function __toString(): string {
+        return $this->url;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +62,18 @@ class TrickVideos
     public function setUrl(string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getProvider(): ?string
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(string $provider): self
+    {
+        $this->provider = $provider;
 
         return $this;
     }
