@@ -58,7 +58,7 @@ class AppFixtures extends Fixture
                     ->setAuthor($user)
                     ->setCategory($category)
                     ->setName($faker->sentence(8))
-                    ->setSlug($faker->slug())
+                    ->setSlug($faker->randomDigitNot(0) . $faker->randomDigitNot(0) . "-" . $faker->slug())
                     ->setOverview($faker->text(256))
                     ->setDescription($faker->text(1024))
                     ->setThumbnail("/static/assets/default_thumbnail.jpg")
@@ -68,7 +68,8 @@ class AppFixtures extends Fixture
                 for ($k = 0; $k < 3; $k++) {
                     $video = (new TrickVideos())
                         ->setTrick($trick)
-                        ->setUrl("https://www.youtube.com/watch?v=".$faker->randomNumber(8))
+                        ->setProvider($faker->randomElement(["youtube", "vimeo"]))
+                        ->setUrl("" . $faker->randomNumber(8))
                     ;
                     $em->persist($video);
                     
