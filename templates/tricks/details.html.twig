@@ -1,8 +1,8 @@
 {% extends "base.html.twig" %}
 {% block javascripts %}
 {{ parent() }}
-{{ encore_entry_script_tags('scrollable') }}
 {{ encore_entry_script_tags('message') }}
+{{ encore_entry_script_tags('player') }}
 {% endblock %}
 {% block body %}
 {% embed "./components/modal.html.twig" %}
@@ -27,10 +27,29 @@
             </div>
             {% endif %}
         </div>
-        <div class="scrollable-container">
-            <div class="trick-scrollable scrollable" data-videos="{#{trick.videos}#}"
-                data-images="{#{trick.images | join("|")}#}">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                {% for image in trick.images %}
+                <div class="swiper-slide">
+                    <img src="{{ image.path }}" alt="{{ trick.name }}">
+                </div>
+                {% endfor %}
+                {% set index = 0 %}
+                {% for video in trick.videos %}
+                    <div class="swiper-slide">
+                        <div 
+                            data-plyr-provider="{{ video.provider }}"
+                            data-plyr-embed-id="{{ video.url }}"
+                            class="plyr__video-embed"
+                        >
+                        </div>
+                    </div>
+                {% set index = index + 1 %}
+                {% endfor %}
             </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
         <div class="container">
             <div class="trick-content">
