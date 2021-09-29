@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use App\Services\PaginationService;
+use App\Service\PaginationService;
 
 use App\Form\MessageFormType;
 use App\Entity\Message;

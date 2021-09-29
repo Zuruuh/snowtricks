@@ -23,7 +23,7 @@ use App\Form\MessageFormType;
 
 use App\Entity\Message;
 use App\Entity\Category;
-use App\Services\PaginationService;
+use App\Service\PaginationService;
 
 #[Route('/tricks', name: 'tricks.')]
 class TricksController extends AbstractController
@@ -331,14 +331,14 @@ class TricksController extends AbstractController
                 "author" => [
                     "id" => $trick->getAuthor()->getId(),
                     "username" => $trick->getAuthor()->getUsername(),
-                    "profile_picture" => $trick->getAuthor()->getProfilePicture(),
+                    "profile_picture" => $trick->getAuthor()->getProfilePicturePath(),
                 ],
                 "name" => $trick->getName(),
                 "overview" => $trick->getOverview(),
-                "thumbnail" => $trick->getThumbnailPath(),
+                "thumbnail" => $trick->getThumbnail(),
                 "slug" => $trick->getSlug(),
-                "post_date" => $trick->getPostDate()->format("\\t\h\\e d/m/Y \a\\t h:m:s"),
-                "last_update" => $trick->getLastUpdate()->format("\\t\h\\e d/m/Y \a\\t h:m:s"),
+                "post_date" => $trick->getPostDate()->format("\\T\h\\e d/m/Y \a\\t h:m:s"),
+                "last_update" => $trick->getLastUpdate()->format("\\T\h\\e d/m/Y \a\\t h:m:s"),
             ];
         }
 
