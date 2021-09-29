@@ -2,6 +2,7 @@
 
 .tricks-search-preview-list {
   height: auto;
+  overflow: hidden;
   .trick-search-preview {
     height: auto;
     position: relative;
@@ -47,6 +48,7 @@
         flex-grow: 1;
         height: 100%;
         display: flex;
+        max-width: 66%;
         flex-direction: column;
         justify-content: space-between;
         align-items: start;
@@ -72,6 +74,8 @@
       }
     }
     &:active {
+      display: flex;
+      align-items: center;
       .trick-preview-card-full {
         .trick-card-background {
           .trick-card-curve {
@@ -131,6 +135,8 @@
               font-size: 2.5rem;
               color: #fff;
               text-decoration: none;
+              max-width: 75%;
+              text-align: center;
               &:hover {
                 text-decoration: underline;
               }
@@ -138,6 +144,8 @@
           }
         }
         .trick-card-content {
+          max-width: 90%;
+          margin-top: 1rem;
           a.btn.btn-primary {
             position: relative;
             left: 50%;
