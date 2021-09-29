@@ -28,6 +28,10 @@ class TrickImages
      */
     private $path;
 
+    public function __toString(): string {
+        return $this->path;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
