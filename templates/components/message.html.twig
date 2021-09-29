@@ -5,7 +5,7 @@
             src="{{ message.author.getProfilePicturePath() }}"
             alt="{{ message.author.username }}'s profile picture"
         />
-        <a class="link link-primary" href="{{ path("user.profile", {id: message.author.id}) }}">{{message.author.username}}</a>
+        <a class="link link-primary" href="{{ path("user.profile", {user_id: message.author.id}) }}">{{message.author.username}}</a>
     </div>
     <p class="mb-0 ms-2">
         {{ message.content }}
