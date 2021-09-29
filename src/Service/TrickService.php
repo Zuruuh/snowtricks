@@ -17,6 +17,7 @@ class TrickService
     private FileService $fileService;
     private FlashBagInterface $flash;
     private Filesystem $filesystem;
+    private $providers;
 
     public function __construct($entityManager, FlashBagInterface $flash)
     {
@@ -24,6 +25,11 @@ class TrickService
         $this->flash = $flash;
         $this->filesystem = new Filesystem();
         $this->fileService = new FileService();
+        $this->providers = [
+            "youtube",
+            "youtu",
+            "vimeo",
+        ];
     }
 
     public function saveTrick(Trick $trick): string
@@ -109,36 +115,35 @@ class TrickService
 
     public function checkAndSaveVideos($videos_data, Trick $trick): bool
     {
-        if (!str_contains($videos_data, "iframe")) {
-            return true;
-        }
-        $videos_data = explode('</iframe>', $videos_data);
-        unset($videos_data[count($videos_data) - 1]);
-        // 1 - Verify data integrity
-        if (!is_array($videos_data)) {
-            $this->flash->add("warning", "Please only upload valid videos data");
-            return false;
-        }
         // 2 - Check if user sent more than 3 videos
         if (sizeof($videos_data) > 3) {
             $this->flash->add("warning", "You can only add up to 3 videos !");
             return false;
         }
+
         // 3 - Validate each video individually
-
         foreach ($videos_data as $video_data) {
-            // 3.1 - Check if array has more than 2 properties (id & service)
-            $video_data = $video_data . "</iframe>";
+            if (gettype($video_data) !== "string") {
+                $this->flash->add("warning", "Please upload valid data");
+            }
 
-            if (str_contains($video_data, 'script>')) {
-                $this->flash->add("warning", "Please only upload valid videos data");
+            $url = preg_replace("/https:\/*|www\.|\.\w*|video\/|embed\/|player\.|watch\?v=/mix", "", $video_data);
+            [$provider, $id] = explode("/", $url);
+            
+            if (!in_array($provider, $this->providers)) {
+                $this->flash->add("warning", "Please only upload videos from Youtube or Vimeo");
                 return false;
             }
 
+            if ($provider === "youtu") {
+                $provider = "youtube";
+            }
+
             // 4 - Verifications are done, save videos
-            $video = new TrickVideos();
-            $video->setTrick($trick);
-            $video->setEmbed($video_data);
+            $video = (new TrickVideos())
+                ->setTrick($trick)
+                ->setProvider($provider)
+                ->setUrl($id);
             $this->em->persist($video);
             $trick->addVideo($video);
         }
@@ -153,7 +158,6 @@ class TrickService
 
     public function deleteFile(string $path): void
     {
-        dump($path);
         $this->fileService->deleteFolder("/static/uploads/" . $path);
     }
 }
