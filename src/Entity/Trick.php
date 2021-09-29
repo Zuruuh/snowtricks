@@ -67,7 +67,7 @@ class Trick
     // protected $thumbnail;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=255)
      */
     private $thumbnail = "/static/assets/default_thumbnail.jpg";
 
