@@ -30,7 +30,7 @@ class TrickRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('t');
         $query->where("t.id > 1");
         
-        if (!$keywords) {
+        if ($keywords) {
             $query->andWhere('MATCH (t.name, t.description, t.overview) AGAINST (:keywords boolean) > 0')
                 ->setParameter('keywords', $keywords);
         }
