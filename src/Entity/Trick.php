@@ -8,12 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
  * @ORM\Table(name="trick", indexes={@ORM\Index(columns={"name", "description", "overview"}, flags={"fulltext"})})
+ * @UniqueEntity(fields={"name"}, message="This name is already in use")
  */
 class Trick
 {
