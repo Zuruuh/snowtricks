@@ -8,6 +8,7 @@
 // * Vendor imports
 @import "./vendor/bootstrap";
 @import "./vendor/fontawesome";
+@import "./vendor/plyr";
 
 // * Base imports
 @import "./base/reset";
@@ -29,6 +30,7 @@
 
 // * Layout Imports
 @import "./layout/navigation";
+@import "./layout/swiper";
 @import "./layout/header";
 @import "./layout/forms";
 @import "./layout/footer";
