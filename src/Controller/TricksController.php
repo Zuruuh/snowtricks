@@ -147,7 +147,8 @@ class TricksController extends AbstractController
             // Creation is done, redirect user towards new trick's details page
             $em->persist($trick);
             $em->flush();
-            return $this->redirectToRoute('tricks.details', ['slug' => $trick_uid]);
+            // return $this->redirectToRoute('tricks.details', ['slug' => $trick_uid]);
+            return $this->redirectToRoute('home.index');
         }
         
         return $this->render("tricks/form.html.twig", [
@@ -158,7 +159,6 @@ class TricksController extends AbstractController
     #[Route("/edit/{slug}", name: "edit")]
     public function edit(Request $request, string $slug): Response
     {
-        // TODO Display images and videos in carousel preview
         if (!$this->getUser()) {
             $this->flash->add("warning", "You must be logged in to access this page !");
             return $this->redirectToRoute('app_login');
