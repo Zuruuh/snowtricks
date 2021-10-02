@@ -50,9 +50,15 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $this->flash->add('success', 'You have successfully connected !');
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+        //  if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+        //      return new RedirectResponse($targetPath);
+        //  }
+        // dump($firewallName);
+        // $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
+        // if ($firewallName == ) {
+        //     return new RedirectResponse($targetPath);
+        // }
+        // dump($targetPath);
         return new RedirectResponse($this->urlGenerator->generate('home.index'));
     }
 
