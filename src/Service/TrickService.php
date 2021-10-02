@@ -154,6 +154,15 @@ class TrickService
     public function deleteTrick(Trick $trick): void
     {
         $this->fileService->deleteFolder("/static/uploads/" . $trick->getSlug());
+        foreach ($trick->getImages() as $image) {
+            $this->em->remove($image);
+        }
+        foreach ($trick->getVideos() as $video) {
+            $this->em->remove($video);
+        }
+        foreach ($trick->getMessages() as $message) {
+            $this->em->remove($message);
+        }
     }
 
     public function deleteFile(string $path): void
