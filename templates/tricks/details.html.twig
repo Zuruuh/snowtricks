@@ -34,7 +34,6 @@
                     <img src="{{ image.path }}" alt="{{ trick.name }}">
                 </div>
                 {% endfor %}
-                {% set index = 0 %}
                 {% for video in trick.videos %}
                     <div class="swiper-slide">
                         <div 
@@ -44,7 +43,6 @@
                         >
                         </div>
                     </div>
-                {% set index = index + 1 %}
                 {% endfor %}
             </div>
             <div class="swiper-pagination"></div>
@@ -84,6 +82,8 @@
                         <button type="submit" class="btn btn-lg btn-primary">Post comment</button>
                     </div>
                     {{ form_end(form) }}
+                {% else %}
+                <p><a href="{{ path('auth.login') }}">Login</a> to post a new comment</p>
                 {% endif %}
                 {% if messages %}
                     <hr>
