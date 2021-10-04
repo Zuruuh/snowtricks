@@ -1,5 +1,4 @@
-FROM php:8.0-fpm-alpine
-FROM node:16-alpine3.11
+FROM node:16-alpine
 
 RUN apk add --no-cache su-exec && \
     addgroup bar && \
