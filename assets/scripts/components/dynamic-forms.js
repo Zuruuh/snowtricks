@@ -1,7 +1,9 @@
 const defaultFields = document.querySelectorAll(".dynamic-field");
 const fieldsContainer = document.querySelector("#video-fields");
+const defaultData = JSON.parse(fieldsContainer.getAttribute("data-default-values"));
 const addBtn = document.querySelector("#add-video-button");
 
+fieldsContainer.removeAttribute("data-default-values");
 let index = defaultFields.length;
 const MAX_FIELDS = 3;
 
@@ -10,8 +12,20 @@ defaultFields.forEach((field) => {
   btn.onclick = (event) => removeField(event, btn.getAttribute("data-field"));
 });
 
+defaultData.forEach(savedField => {
+  addField(savedField.url, savedField.provider)
+})
+
 addBtn.onclick = (event) => {
   event.preventDefault();
+  addField();
+};
+
+function addField(videoId = "", provider = "") {
+  let defaultValue = ""
+  if (videoId && provider) {
+    defaultValue = getFullLink(videoId, provider);
+  }
   const fields = document.querySelectorAll(".dynamic-field");
   if (fields.length < MAX_FIELDS) {
     // * Create new field and append to container
@@ -26,6 +40,7 @@ addBtn.onclick = (event) => {
     input.placeholder = "https://www.youtube.com/watch?v=...";
     input.classList.add("me-2");
     input.type = "text";
+    input.value = defaultValue;
     input.name = `trick_form[videos][${index}]`;
     input.id = `trick_form_videos_${index}`;
 
@@ -52,7 +67,8 @@ addBtn.onclick = (event) => {
   if (fields.length + 1 === MAX_FIELDS) {
     addBtn.disabled = true;
   }
-};
+}
+
 
 function removeField(event, id) {
   event.preventDefault();
@@ -63,4 +79,17 @@ function removeField(event, id) {
       field.remove();
     }
   });
+}
+
+function getFullLink(id, provider) {
+  let url = "";
+  switch(provider) {
+    case "youtube":
+      url = "https://www.youtube.com/watch?v="
+      break;
+    case "vimeo":
+      url = "hhttps://vimeo.com/"
+      break;
+  }
+  return url + id;
 }
