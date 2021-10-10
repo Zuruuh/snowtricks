@@ -28,6 +28,7 @@ Encore
   .addEntry("player", "./assets/scripts/components/player.js")
   .addEntry("dynamic-forms", "./assets/scripts/components/dynamic-forms.js")
   .addEntry("image-preview", "./assets/scripts/components/update-image.js")
+  .addEntry("pages/home", "./assets/scripts/pages/home.js")
 
   // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
   .enableStimulusBridge("./assets/controllers.json")
@@ -63,8 +64,8 @@ Encore
   })
 
   // enables Sass/SCSS support
-  .enableSassLoader();
-
+  .enableSassLoader()
+  .addAliases({});
 // uncomment if you use TypeScript
 //.enableTypeScriptLoader()
 
