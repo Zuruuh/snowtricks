@@ -19,3 +19,8 @@
 /yarn-error.log
 /public/build/
 ###< symfony/webpack-encore-bundle ###
+
+###> IDE Config ###
+.vscode/
+.idea/
+###< IDE CONFIG ###
