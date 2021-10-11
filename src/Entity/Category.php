@@ -40,7 +40,7 @@ class Category
         $this->tricks = new ArrayCollection();
     }
 
-    public function __tostring()
+    public function __toString()
     {
         return $this->name;
     }
