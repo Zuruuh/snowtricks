@@ -1,1 +1,12 @@
-<!-- TODO add tricks preview -->
+<section class="container">
+	<div class="loader loader-lg"></div>
+	<div class="row" data-logged-in="{% if app.user %}1{% endif %}" id="tricks-preview" data-home-url="{{ absolute_url("/") }}"></div>
+	<div class="w-full d-flex justify-content-center">
+		<button id="load-more-button" class="btn btn-primary btn-lg mt-4">Load More
+			<i class="fas fa-plus-square"></i>
+		</button>
+		<a href="#" id="tricks" id="goto-tricks" class="anchor-link">
+			<i class="fas fa-arrow-up"></i>
+		</a>
+	</div>
+</section>
