@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
-use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -52,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $profile_picture_path = "/static/assets/avatars/default.png";
+    private $profile_picture_path = '/static/assets/avatars/default.png';
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="author")
