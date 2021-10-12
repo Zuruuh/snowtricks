@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
 use App\Repository\UserRepository;
-
+use App\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -30,10 +30,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'auth.register')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordHasher $passwordEncoder): Response
     {
         if ($this->getUser()) {
-            $this->flash->add("warning", "You are already connected !");
+            $this->flash->add('warning', 'You are already connected !');
+
             return $this->redirectToRoute('home.index');
         }
         $user = new User();
@@ -45,16 +46,16 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user = $form->getData();
-            
-            if ($repo->findOneBy(["email" => $user->getEmail()])) {
-                $this->flash->add(
-                    "danger",
-                    "This email is already in use"
+
+            if ($repo->findOneBy(['email' => $user->getEmail()])) {
+                $this->form->get('email')->addError(
+                    new FormError('This email is already in use')
                 );
+
                 return $this->redirectToRoute('auth.register');
             }
             $user->setPassword(
-                $passwordEncoder->encodePassword(
+                $passwordEncoder->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -62,7 +63,7 @@ class RegistrationController extends AbstractController
 
             $em->persist($user);
             $em->flush();
-    
+
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
@@ -73,11 +74,12 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('security/confirmation_email.html.twig')
             );
-    
+
             $this->flash->add(
-                "success",
-                "An email has been sent to you. Verify your account in order to use the website"
+                'success',
+                'An email has been sent to you. Verify your account in order to use the website'
             );
+
             return $this->redirectToRoute('home.index');
         }
 
@@ -85,6 +87,7 @@ class RegistrationController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository): Response
     {
@@ -93,7 +96,7 @@ class RegistrationController extends AbstractController
         if (null === $id) {
             return $this->redirectToRoute('auth.register');
         }
-        
+
         $user = $userRepository->find($id);
 
         if (null === $user) {
@@ -105,12 +108,14 @@ class RegistrationController extends AbstractController
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
+
             return $this->redirectToRoute('auth.register');
         }
         // // / TODO Log user in
-        
+
         $request->getSession()->set(Security::LAST_USERNAME, $user->getUserIdentifier());
         $this->addFlash('success', 'Your email address has been verified, have fun!');
+
         return $this->redirectToRoute('home.index');
     }
 }

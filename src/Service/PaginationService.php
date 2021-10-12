@@ -8,9 +8,9 @@ class PaginationService
     {
         $MAX_PAGE = 1;
         $OFFSET = 0;
-        
+
         while ($total > $LIMIT) {
-            $MAX_PAGE++;
+            ++$MAX_PAGE;
             $total -= $LIMIT;
         }
         $PAGE = $PAGE > $MAX_PAGE ? $MAX_PAGE : $PAGE;
@@ -28,7 +28,7 @@ class PaginationService
             [
                 'offset' => $OFFSET,
                 'limit' => $LIMIT,
-            ]
+            ],
         ];
     }
 }

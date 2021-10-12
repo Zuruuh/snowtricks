@@ -1,9 +1,10 @@
 <li class="video-item" data-field-id="{{ index }}">
     {{ form_errors(form.videos) }}
+    {{ form_label(form.videos) }}
     <div class="dynamic-field">
         {{ form_widget(form.videos, {
             attr: {
-                class: "me-2"
+                class: "me-2",
             }
         }) }}
         <button class="btn btn-danger" data-field="{{ index }}"><i class="fas fa-minus-square"></i></button>
