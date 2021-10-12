@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 uid=$(stat -c %u /srv)
 gid=$(stat -c %g /srv)
