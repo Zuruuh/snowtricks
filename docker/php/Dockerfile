@@ -7,20 +7,20 @@ COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 ENV APCU_VERSION 5.1.17
 
 RUN apk add --no-cache \
-        ca-certificates \
-        icu-libs \
-        git \
-        unzip \
-        libzip-dev \
-        zlib-dev && \
+    ca-certificates \
+    icu-libs \
+    git \
+    unzip \
+    libzip-dev \
+    zlib-dev && \
     apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        icu-dev && \
+    $PHPIZE_DEPS \
+    icu-dev && \
     docker-php-ext-install \
-        intl \
-        zip && \
+    intl \
+    zip && \
     pecl install apcu-${APCU_VERSION} && \
-    dockerdocker-php-ext-enable apcu && \
+    docker-php-ext-enable apcu && \
     docker-php-ext-enable opcache && \
     docker-php-ext-install pdo_mysql && \
     echo "short_open_tag = off" >> /usr/local/etc/php/php.ini && \
