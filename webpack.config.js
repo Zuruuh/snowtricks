@@ -23,7 +23,6 @@ Encore
   .addEntry("app", "./assets/app.js")
   .addEntry("forms", "./assets/scripts/components/forms.js")
   .addEntry("toasts", "./assets/scripts/components/toasts.js")
-  .addEntry("select", "./assets/scripts/components/select.js")
   .addEntry("message", "./assets/scripts/components/message.js")
   .addEntry("player", "./assets/scripts/components/player.js")
   .addEntry("dynamic-forms", "./assets/scripts/components/dynamic-forms.js")
