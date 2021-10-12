@@ -30,32 +30,9 @@
                 <img id="trick-thumbnail-preview" src="{{ trick_thumbnail|default("/static/assets/header.jpg") }}">
                 <figcaption>Current thumbnail</figcaption>
             </figure>
-            <fieldset>{{ form_row(form.images) }} </fieldset>
-            {% if trick_images|default(false) %}
-            <div id="trick-images-carousel-preview" class="carousel slide" data-bs-ride="carousel">
-                {# ! TODO UPDATE ON INPUT CAROUSELS AND IMAGE PREVIEW #}
-                <div class="carousel-inner">
-                    {% set first = true %}
-                    {% for image in trick_images %}
-                    <div class="carousel-item{% if first %} {% set first = false %} active {% endif %}">
-                        <img src="{{ image.src }}" class="d-block w-100">
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <button class="carousel-control carousel-control-prev" type="button"
-                    data-bs-target="#trick-images-carousel-preview" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-
-                <button class="carousel-control carousel-control-next" type="button"
-                    data-bs-target="#trick-images-carousel-preview" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            {% endif %}
+            <fieldset>
+                {{ form_row(form.images) }}
+            </fieldset>
 
             <fieldset>
                 <div class="d-flex justify-content-between mb-2">
@@ -64,60 +41,23 @@
                         <i class="fas fa-plus-square"></i>
                     </button>
                 </div>
-                {{ form_errors(form.videos) }} 
-                <ol class="list" id="video-fields">
-                    {% if form.videos is empty %}
+                {{ form_errors(form.videos) }}
+                <ol class="list" id="video-fields" data-default-values="{{ videos|default("[]") }}">
+                    {% if videos|default(false) is empty %}
                     <li class="video-item" data-field-id="0">
                         <div class="dynamic-field">
                             <input placeholder="https://www.youtube.com/watch?v=..." class="me-2" type="text" id="trick_form_videos_0" name="trick_form[videos][0]" />
                             <button data-field="0" class="btn btn-danger"><i class="fas fa-minus-square"></i></button>
                         </div>
                     </li>
-                    {% else %}
-                        {% for video_field, index in form.videos %}
-                            {% embed "components/form-dynamic-field.html.twig" %}
-                            {% endembed %}
-                        {% endfor %}
                     {% endif %}
                 </ol>
             </fieldset>
-
-            {#% if trick_videos|default(false) %}
-            <div id="trick-videos-carousel-preview" class="carousel slide" data-bs-ride="carousel">
-
-                <div class="carousel-inner">
-                    {% set first = true %}
-                    {% for video in trick_videos %}
-                    <div
-                        class="carousel-item{% if first %}{% set first = false %} active{% endif %} video-carousel-item">
-                        {{ video|raw }}
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <button class="carousel-control carousel-control-prev" type="button"
-                    data-bs-target="#trick-videos-carousel-preview" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-
-                <button class="carousel-control carousel-control-next" type="button"
-                    data-bs-target="#trick-videos-carousel-preview" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            {% endif % #}
-            <!--
-            <div class="my-1" id="trick-videos" data-initial-values=''>
-                <div class="d-flex" style="height: 350px; overflow-x:scroll;" id="tricks-videos-scrollable">
-                     Dynamic iframes view here
-                </div>
-            </div> -->
             <button type="submit" class="btn btn-primary">
                 {{ current_path == path('tricks.create') ? 'Create' : 'Save modifications' }}
             </button>
-            {{ form_end(form) }}
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {render_rest: false}) }}
         </div>
     </div>
 </div>
