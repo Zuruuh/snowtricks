@@ -4,9 +4,9 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class UserFormType extends AbstractType
 {
@@ -15,7 +15,7 @@ class UserFormType extends AbstractType
         $builder
             ->add('profile_picture', FileType::class, [
                 'label' => 'Profile picture',
-                "mapped" => false,
+                'mapped' => false,
                 'required' => false,
             ])
         ;
