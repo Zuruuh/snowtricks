@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MessageRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)

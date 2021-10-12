@@ -3,14 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-use \DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -41,22 +39,22 @@ class Trick
      * @ORM\Column(type="string", length=128, unique=true)
      */
     private $name;
-    
+
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $slug;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $overview;
-    
+
     // https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
     // #[Assert\File(
     //     maxSize: "8192k",
@@ -69,7 +67,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $thumbnail = "/static/assets/default_thumbnail.jpg";
+    private $thumbnail = '/static/assets/default_thumbnail.jpg';
 
     /**
      * @ORM\OneToMany(targetEntity=TrickVideos::class, mappedBy="trick", orphanRemoval=true)
@@ -98,8 +96,8 @@ class Trick
 
     public function __construct()
     {
-        $this->messages    = new ArrayCollection();
-        $this->post_date   = new \DateTime();
+        $this->messages = new ArrayCollection();
+        $this->post_date = new \DateTime();
         $this->last_update = new \DateTime();
         $this->videos = new ArrayCollection();
         $this->images = new ArrayCollection();
@@ -181,11 +179,11 @@ class Trick
 
         return $this;
     }
-    
+
     public function setThumbnail(?string $thumbnail): self
     {
         $this->thumbnail = $thumbnail;
-        
+
         return $this;
     }
 

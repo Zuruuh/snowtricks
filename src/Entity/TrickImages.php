@@ -28,7 +28,8 @@ class TrickImages
      */
     private $path;
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->path;
     }
 

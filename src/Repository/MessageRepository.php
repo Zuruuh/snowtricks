@@ -45,10 +45,11 @@ class MessageRepository extends ServiceEntityRepository
         } else {
             $query->andWhere('m.post is NULL');
         }
-        
+
         $query->setMaxResults($limit)
             ->setFirstResult($offset)
             ->orderBy('m.id', 'DESC');
+
         return $query->getQuery()->getResult();
     }
 
@@ -58,7 +59,7 @@ class MessageRepository extends ServiceEntityRepository
         $query->select('COUNT(m.id)')
             ->where('m.author = :author')
             ->setParameter('author', $user);
-        
+
         return $query->getQuery()->getSingleScalarResult();
     }
 
