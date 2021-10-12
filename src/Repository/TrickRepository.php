@@ -21,23 +21,23 @@ class TrickRepository extends ServiceEntityRepository
     }
 
     public function search(
-        string $keywords = "",
+        string $keywords = '',
         int $category = 0,
         int $offset = 0,
         int $limit = 0,
         bool $count = false
     ): array|int {
         $query = $this->createQueryBuilder('t');
-        $query->where("t.id > 1");
-        
+        $query->where('t.id > 1');
+
         if ($keywords) {
             $query->andWhere('MATCH (t.name, t.description, t.overview) AGAINST (:keywords boolean) > 0')
                 ->setParameter('keywords', $keywords);
         }
-        
+
         if ($category > 0) {
-            $query->leftJoin("t.category", "c")
-                ->andWhere("c.id = :category")
+            $query->leftJoin('t.category', 'c')
+                ->andWhere('c.id = :category')
                 ->setParameter('category', $category);
         }
 
@@ -59,36 +59,25 @@ class TrickRepository extends ServiceEntityRepository
         $query->select('COUNT(t.id)')
             ->where('t.author = :author')
             ->setParameter('author', $user);
-        
+
         return $query->getQuery()->getSingleScalarResult();
     }
-    
-    // /**
-    //  * @return Trick[] Returns an array of Trick objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Trick
+    public function getPaginatedTricks(int $index, int $max): array
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $query = $this->createQueryBuilder('t')
+            ->orderBy('t.post_date', 'DESC')
+            ->setMaxResults($max)
+            ->setFirstResult($index);
+
+        return $query->getQuery()->getScalarResult();
     }
-    */
+
+    public function countAll(): int
+    {
+        $query = $this->createQueryBuilder('t')
+            ->where('t.id > 0');
+
+        return count($query->getQuery()->getScalarResult());
+    }
 }
