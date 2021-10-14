@@ -45,7 +45,7 @@ class MessageService
      *
      * @param int   $page
      * @param int   $trick_id
-     * 
+     *
      * @return Array [$controls, $params]
      */
     public function paginate(int $page, $trick_id = 0): array
@@ -60,10 +60,10 @@ class MessageService
 
     /**
      * Returns the current page of messages
-     * 
+     *
      * @param int        $page
      * @param int        $trick_id
-     * 
+     *
      * @return Messages[] $messages
      */
     public function get(int $page, $trick_id = 0): array
@@ -79,10 +79,10 @@ class MessageService
 
     /**
      * Returns the pagination and the messages which will be displayed
-     * 
+     *
      * @param int   $page
      * @param int   $trick_id
-     * 
+     *
      * @return array [$messages, $pagination]
      */
     public function display(int $page, int $trick_id): array
@@ -95,10 +95,10 @@ class MessageService
 
     /**
      * Creates a new message and save it to database
-     * 
+     *
      * @param string   $content
      * @param int|null $trick_id
-     * 
+     *
      * @return string $route
      */
     public function save(string $content, int $trick_id = null): string
@@ -115,9 +115,10 @@ class MessageService
 
     /**
      * Updates a message
-     * 
+     *
      * @param  Message $message
      * @param  string  $content
+     *
      * @return string  $route
      */
     public function update(Message $message, string $content): string
@@ -134,9 +135,9 @@ class MessageService
 
     /**
      * Deletes a message
-     * 
+     *
      * @param Message $message
-     * 
+     *
      * @return string $route
      */
     public function delete(Message $message): string
@@ -158,9 +159,9 @@ class MessageService
 
     /**
      * Checks in database if a message exists
-     * 
+     *
      * @param int $id
-     * 
+     *
      * @return Message $message
      */
     public function isAuthorized(int $id): Message
@@ -179,9 +180,9 @@ class MessageService
 
     /**
      * Returns a redirect route towards the chat index page or the trick's page
-     * 
+     *
      * @param Message $message
-     * 
+     *
      * @return string $route
      */
     private function generateRoute(Message $message): string
