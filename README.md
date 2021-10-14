@@ -1,8 +1,10 @@
 # Snowtricks
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6e9d7551cdfa43d5ae30808cc5978d4a)](https://www.codacy.com/gl/Zuruh/snowtricks/dashboard)
+
 Snowtricks is a website that brings together all snowboard enjoyers.
 
-## Development environement
+## Environement
 
 ### Requirements
 
@@ -25,6 +27,9 @@ node -v
 npm -v
 yarn -v
 ```
+
+Once this is done, update the DSN env variables in the .env file.  
+Then, rename the .env file to be .env.local
 
 ### Setup the developing environment
 
@@ -64,7 +69,7 @@ $ yarn build
 
 Now your server should be ready ! You'll just have to start it.
 
-### Starting the server
+## Starting the server
 
 When this is done, you can start the local server using this command:
 
