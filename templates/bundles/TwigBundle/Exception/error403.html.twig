@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<section class="container error-page">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card error-card">
+                <h1>Error 403</h1>
+                <p>You are not allowed to do this 🙁</p>
+                <p><a href="{{ path('home.index') }}">Go back to Homepage</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
