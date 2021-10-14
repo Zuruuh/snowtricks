@@ -54,14 +54,14 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
 
-        $form = $this->createForm(UserFormType::class, $this->getUser());
+        $form = $this->createForm(UserFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $image = $form->get('profile_picture');
+            $user = $form->getData();
             $route = $this->user_service->update(
                 $user,
-                $image
+                $form->get('profile_picture')->getData()
             );
 
             return $this->redirect($route);

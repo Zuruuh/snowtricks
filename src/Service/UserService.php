@@ -25,7 +25,7 @@ class UserService
     const USER_NOT_EXISTS = 'This user does not exists';
     const PROFILE_UPDATED = 'Your profile has been updated';
 
-    const AVATARS_DIR = '/static/uploads/avatars';
+    const AVATARS_DIR = 'avatars/';
     const SELF_ROUTE = 'user.me';
 
     public function __construct(
@@ -83,13 +83,14 @@ class UserService
      * Updates an user's profile
      *
      * @param User          $user
-     * @param FormInterface $image_form
+     * @param UploadedFile $image_form
      *
      * @return void
      */
-    public function update(User $user, FormInterface $image_form): string
+    public function update(User $user, UploadedFile $image): string
     {
-        $this->updateProfilePicture($user, $image_form);
+        dump($image);
+        $this->updateProfilePicture($user, $image);
 
         $this->flash->add('success', self::PROFILE_UPDATED);
 
@@ -100,13 +101,12 @@ class UserService
      * Updates an user's profile picture
      *
      * @param User          $user
-     * @param FormInterface $image_form
+     * @param UploadedFile $image
      *
      * @return void
      */
-    public function updateProfilePicture(User $user, FormInterface $image_form): void
+    public function updateProfilePicture(User $user, UploadedFile $image): void
     {
-        $image = $image_form->getData();
         $current_picture = $user->getProfilePicturePath();
 
         $image_name = $user->getId() . '.' . $image->guessExtension();
@@ -147,8 +147,8 @@ class UserService
      */
     private function saveProfilePicture(UploadedFile $image, string $name): string
     {
-        $path = getcwd() . TrickService::UPLOADS_DIR;
-        $image->move($path, $name);
+        $path = TrickService::UPLOADS_DIR . self::AVATARS_DIR;
+        $image->move(getcwd() . $path, $name);
         return $path . $name;
     }
 
