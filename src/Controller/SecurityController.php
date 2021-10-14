@@ -29,7 +29,6 @@ class SecurityController extends AbstractController
         $this->flash = $flash;
         $this->mailer = $mailer;
     }
-    // TODO: Update this file
 
     #[Route('/login', name: 'auth.login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
