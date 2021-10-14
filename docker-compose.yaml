@@ -35,30 +35,6 @@ services:
       PMA_DATABASE: "snowtricks"
     volumes:
       - snowtricks_data:/phpmyadmin
-  #http:
-  #  image: nginx:l-alpine
-  #  ports:
-  #    - "80:80"
-  #  volumes:
-  #    - snowtricks_data:/nginx
-  #  links:
-  #    - database
-  #    - mailer
-  #    - phpmyadmin
-  #php:
-  #  build: ./docker/php
-  #  working_dir: /srv
-  #  volumes:
-  #    - ./:/srv
-#
-#node:
-#  build: ./docker/node
-#  working_dir: /srv
-#  volumes:
-#    - ./:/srv
-#
-networks:
-  dev:
 
 volumes:
   snowtricks_data:
