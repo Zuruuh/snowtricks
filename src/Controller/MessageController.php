@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 #[Route('/chat', name: 'chat.')]
 class MessageController extends AbstractController
@@ -17,9 +16,8 @@ class MessageController extends AbstractController
 
     const INDEX = "chat.index";
 
-    public function __construct(FlashBagInterface $flash, MessageService $message_service)
+    public function __construct(MessageService $message_service)
     {
-        $this->flash = $flash;
         $this->message_service = $message_service;
     }
 
