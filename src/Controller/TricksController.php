@@ -2,37 +2,28 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
-use App\Entity\Trick;
-use App\Form\MessageFormType;
 use App\Form\TrickFormType;
-use App\Repository\TrickRepository;
-use App\Service\MessageService;
-use App\Service\PaginationService;
+use App\Form\MessageFormType;
+use App\Form\TrickSearchType;
 use App\Service\TrickService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use App\Service\MessageService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/tricks', name: 'tricks.')]
 class TricksController extends AbstractController
 {
-    private FlashBagInterface $flash;
     private TrickService $trick_service;
     private MessageService $message_service;
 
     const DATE_FORMAT = '\T\h\e\ d/m/Y \a\t H:i:s';
 
     public function __construct(
-        FlashBagInterface $flash,
         TrickService $trick_service,
         MessageService $message_service,
     ) {
-        $this->flash = $flash;
         $this->trick_service = $trick_service;
         $this->message_service = $message_service;
     }
@@ -111,28 +102,15 @@ class TricksController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick = $form->getData();
-            $route = $this->service->update(
+            $route = $this->trick_service->update(
                 $trick,
                 $form->get('thumbnail'),
                 $form->get('videos'),
                 $form->get('images'),
             );
-            $trick->setSlug($this->service->makeSlug($trick->getName()));
-
             return $this->redirect($route);
         }
-
-        $videos_entities = $trick->getVideos();
-        $videos = [];
-        foreach ($videos_entities as $video_entity) {
-            $videos[] = [
-                "id" => $video_entity->getId(),
-                "url" => $video_entity->getUrl(),
-                "provider" => $video_entity->getProvider()
-            ];
-        }
-        dump($videos);
-
+        $videos = $this->trick_service->getVideos($trick);
 
         return $this->render('tricks/form.html.twig', [
             'form' => $form->createView(),
@@ -143,107 +121,42 @@ class TricksController extends AbstractController
     #[Route('/delete/{slug}', name: 'delete')]
     public function delete(string $slug): Response
     {
-        $trick = $this->service->exists($slug);
-        $route = $this->service->delete($trick);
+        $trick = $this->trick_service->exists($slug);
+        $route = $this->trick_service->delete($trick);
 
         return $this->redirect($route);
     }
 
     #[Route('/search', name: 'search')]
-    public function search(TrickRepository $repo, Request $request, PaginationService $page_service): Response
+    public function search(Request $request): Response
     {
-        $form = $this->createFormBuilder([])
-            ->add('search', SearchType::class, [
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Search for a trick by keywords..',
-                ],
-            ])
-            ->add('category', EntityType::class, [
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'class' => Category::class,
-            ])
-            ->getForm();
-
+        $form = $this->createForm(TrickSearchType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $query = [];
-            $query['query'] = $data['search'] ? $this->service->makeSlug($data['search'], '+') : null;
-            if ($data['category']) {
-                $query['category'] = $data['category']->getId();
-            } else {
-                $query['category'] = null;
-            }
-
-            return $this->redirectToRoute('tricks.search', [
-                'query' => $query['query'],
-                'category' => $query['category'],
-            ]);
-        }
-
-        $query = $request->get('query');
-        $category = $request->get('category');
-        $page = $request->get('page', 1);
-        $tricks = [];
-        if ($query || $category) {
-            if (!$category) {
-                $category = 0;
-            }
-            if (intval($page) <= 0) {
-                $page = 1;
-            }
-
-            $query = preg_replace('/\+{2,}/', '+', $query);
-            $query = str_replace('+', ' ', $query);
-            $trick_number = $repo->search(
-                $query,
-                $category,
-                0,
-                0,
-                true
+            $route = $this->trick_service->generateSearchRoute(
+                $data['search'] ?? '',
+                $data['category'] ?? 0
             );
-            [$controls, $params] = $page_service->paginate($trick_number, $page, 10);
 
-            $tricks = $repo->search(
-                $query,
-                $category,
-                $params['offset'],
-                $params['limit'],
-                false
-            );
+            return $this->redirect($route);
         }
 
-        $tricks_list = [];
-        foreach ($tricks as $trick) {
-            $tricks_list[] = [
-                'id' => $trick->getId(),
-                'category' => [
-                    'id' => $trick->getCategory()->getId(),
-                    'name' => $trick->getCategory()->getName(),
-                ],
-                'author' => [
-                    'id' => $trick->getAuthor()->getId(),
-                    'username' => $trick->getAuthor()->getUsername(),
-                    'profile_picture' => $trick->getAuthor()->getProfilePicturePath(),
-                ],
-                'name' => $trick->getName(),
-                'overview' => $trick->getOverview(),
-                'thumbnail' => $trick->getThumbnail(),
-                'slug' => $trick->getSlug(),
-                'post_date' => $trick->getPostDate()->format("\\T\h\\e d/m/Y \a\\t h:m:s"),
-                'last_update' => $trick->getLastUpdate()->format("\\T\h\\e d/m/Y \a\\t h:m:s"),
-            ];
-        }
+        $query = $request->query->get('query', '');
+        $category = $request->query->getInt('category', 0);
+        $page = $request->query->getInt('page', 1);
+
+        $search = $this->trick_service->search(
+            $query,
+            $category,
+            $page
+        );
 
         return $this->render('tricks/search.html.twig', [
             'form' => $form->createView(),
-            'tricks' => $tricks_list,
+            'tricks' => $search['tricks'],
+            'pagination' => $search['pagination']
         ]);
     }
 }
