@@ -46,9 +46,9 @@ class UserService
 
     /**
      * Checks if a user exists
-     * 
+     *
      * @param int $id
-     * 
+     *
      * @return User $user
      */
     public function exists(int $id): User
@@ -64,9 +64,9 @@ class UserService
 
     /**
      * Returns a user's statistics
-     * 
+     *
      * @param User $user
-     * 
+     *
      * @return array ['tricks', 'messages']
      */
     public function getStats(User $user): array
@@ -81,10 +81,10 @@ class UserService
 
     /**
      * Updates an user's profile
-     * 
+     *
      * @param User          $user
      * @param FormInterface $image_form
-     * 
+     *
      * @return void
      */
     public function update(User $user, FormInterface $image_form): string
@@ -98,10 +98,10 @@ class UserService
 
     /**
      * Updates an user's profile picture
-     * 
+     *
      * @param User          $user
      * @param FormInterface $image_form
-     * 
+     *
      * @return void
      */
     public function updateProfilePicture(User $user, FormInterface $image_form): void
@@ -123,9 +123,9 @@ class UserService
 
     /**
      * Deletes an image
-     * 
+     *
      * @param string $path
-     * 
+     *
      * @return void
      */
     private function deleteProfilePicture(string $path): void
@@ -139,10 +139,10 @@ class UserService
 
     /**
      * Saves an image
-     * 
+     *
      * @param UploadedFile $image
      * @param string       $name
-     * 
+     *
      * @return string $path
      */
     private function saveProfilePicture(UploadedFile $image, string $name): string
@@ -154,7 +154,7 @@ class UserService
 
     /**
      * Generates a return route
-     * 
+     *
      * @return string
      */
     private function generateRoute(): string
