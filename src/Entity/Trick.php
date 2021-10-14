@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Trick
 {
+    const DEFAULT_THUMBNAIL = '/static/assets/default_thumbnail.jpg';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -67,7 +68,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $thumbnail = '/static/assets/default_thumbnail.jpg';
+    private $thumbnail = self::DEFAULT_THUMBNAIL;
 
     /**
      * @ORM\OneToMany(targetEntity=TrickVideos::class, mappedBy="trick", orphanRemoval=true)
