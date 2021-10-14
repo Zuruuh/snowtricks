@@ -66,6 +66,7 @@ class TrickFormType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'empty_data' => null,
+                'required' => false,
                 'placeholder' => 'None'
             ])
             ->add('thumbnail', Type\FileType::class, [
