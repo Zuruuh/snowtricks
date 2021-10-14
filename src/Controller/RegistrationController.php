@@ -48,7 +48,7 @@ class RegistrationController extends AbstractController
             $user = $form->getData();
 
             if ($repo->findOneBy(['email' => $user->getEmail()])) {
-                $this->form->get('email')->addError(
+                $form->get('email')->addError(
                     new FormError('This email is already in use')
                 );
 
