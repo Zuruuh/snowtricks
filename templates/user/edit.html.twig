@@ -5,7 +5,7 @@
 {% endblock %}
 {% block title %}My Profile{% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="container pt-4">
         {{ form_start(form, {
             attr: {
                 class: 'card form-card'
@@ -16,15 +16,12 @@
             <div class="image-preview-container">
                 <div class="image-container">
                     <img class="image-preview" id="image-preview-1" src="{{ app.user.profilePicturePath}}" />
-                    <!-- <div class="backdrop-background">
-                        <i class="fas fa-file-upload"></i> -->
                         {{ form_widget(form.profile_picture, {
                             attr: {
                                 "class": "image-preview-input",
                                 "data-preview": '#image-preview-1'
                             }
                         }) }}
-                    <!-- </div> -->
                 </div>
             </div>
         </fieldset>
