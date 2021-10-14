@@ -28,14 +28,6 @@ yarn -v
 
 ### Setup the developing environment
 
-If you are on a Linux or MacOS system, you can use the Makefile to setup the project, just run the commands:  
-`$ sudo apt install make` =====> To make sure you have the _make_ package installed  
-`$ make install` ============> To actually setup the project
-<br>
-<br>
-If your installation went correctly, you can directly skip to the next part.  
-Else, you'll have to setup manually the project.
-
 First you will need to install the project dependencies. Run the following commands to get started:
 
 ```bash
@@ -51,6 +43,26 @@ $ php bin/console doctrine:database:create
 $ php bin/console d:m:m
 $ php bin/console d:f:l
 ```
+
+## Setup the production environment
+
+Pull the repo on your production server, and make sure it meets all the requirements.  
+Then, run the following commands to install the dependencies.
+
+```bash
+$ composer install --no-dev
+$ yarn install
+```
+
+You'll now need to setup the app's secret. Simply update the .env file to match your settings.
+
+Then, simply build all the assets by running this command:
+
+```bash
+$ yarn build
+```
+
+Now your server should be ready ! You'll just have to start it.
 
 ### Starting the server
 
