@@ -18,6 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    const DEFAULT_PROFILE_PICTURE = '/static/assets/avatars/default.png';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -51,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $profile_picture_path = '/static/assets/avatars/default.png';
+    private $profile_picture_path = self::DEFAULT_PROFILE_PICTURE;
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="author")
