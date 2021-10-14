@@ -8,6 +8,9 @@
   &-infos {
     display: flex;
     height: 100%;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
     padding: 0.5rem;
     a {
       width: 80%;
@@ -16,12 +19,9 @@
     }
     .trick-card-actions {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 20%;
-      height: 100%;
-      a {
-      }
+      justify-content: space-around;
+      width: 100%;
+      height: auto;
       button {
         display: flex;
         align-items: center;
