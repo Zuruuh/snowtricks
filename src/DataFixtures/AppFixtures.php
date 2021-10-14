@@ -11,16 +11,15 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    private $encoder;
+    private $hasher;
 
-    // TODO: Use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher instead
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $hasher)
     {
-        $this->encoder = $encoder;
+        $this->hasher = $hasher;
     }
 
     public function load(ObjectManager $em)
@@ -33,7 +32,7 @@ class AppFixtures extends Fixture
             ->setRegisterDate(new \DateTime())
             ->setIsVerified(true);
 
-        $password = $this->encoder->encodePassword($me, 'aaaaaaaa');
+        $password = $this->hasher->hashPassword($me, 'aaaaaaaa');
         $me->setPassword($password);
         $em->persist($me);
 
