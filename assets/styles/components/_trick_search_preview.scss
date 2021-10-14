@@ -3,24 +3,10 @@
   overflow: hidden;
   .trick-search-preview {
     height: auto;
-    position: relative;
     min-height: 175px;
     .trick-preview-card-full {
       display: flex;
       height: 100%;
-      .trick-card-background {
-        height: 100%;
-        width: 33%;
-        overflow: hidden;
-        display: none;
-        @include media-breakpoint-up(md) {
-          display: flex;
-        }
-      }
-      .trick-card-image {
-        width: 100%;
-        height: 100%;
-      }
       .trick-card-content {
         flex-grow: 1;
         height: 100%;
