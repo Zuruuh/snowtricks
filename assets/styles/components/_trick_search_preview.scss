@@ -9,9 +9,6 @@
       display: flex;
       height: 100%;
       .trick-card-background {
-        position: absolute;
-        right: 0;
-        top: 0;
         height: 100%;
         width: 33%;
         overflow: hidden;
@@ -19,28 +16,10 @@
         @include media-breakpoint-up(md) {
           display: flex;
         }
-        .trick-card-image {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transform-origin: bottom right;
-          transform: scale(1.5);
-        }
-        .trick-card-curve {
-          position: absolute;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          stroke: #fff;
-          fill: #fff;
-          stroke-width: 4px;
-          width: 100%;
-          height: 100%;
-        }
       }
-      .trick-card-infos,
-      .trick-card-dates {
-        @include hidden;
+      .trick-card-image {
+        width: 100%;
+        height: 100%;
       }
       .trick-card-content {
         flex-grow: 1;
@@ -57,28 +36,6 @@
           }
           a.link-primary {
             margin-top: 0.5rem;
-          }
-        }
-      }
-    }
-    &:hover {
-      .trick-preview-card-full {
-        .trick-card-background {
-          .trick-card-curve {
-            stroke: #f8f9fa;
-            fill: #f8f9fa;
-          }
-        }
-      }
-    }
-    &:active {
-      display: flex;
-      align-items: center;
-      .trick-preview-card-full {
-        .trick-card-background {
-          .trick-card-curve {
-            stroke: #e9ecef;
-            fill: #e9ecef;
           }
         }
       }
