@@ -1,17 +1,6 @@
-<li id="trick-{{ trick.id }}-preview" 
+<li id="trick-{{ trick.id }}-preview"
     class="list-group-item list-group-item-action trick-search-preview">
     <div class="trick-preview-card-full">
-        <div class="trick-card-background">
-            <div class="trick-card-image"
-                style="background: url('{{ trick.thumbnail }}') no-repeat center center/cover">
-                <div class="overlay">
-                    <div class="background-overlay"></div>
-                    <a href="{{ path("tricks.details", {slug: trick.slug}) }}"
-                        class="background-overlay-link">{{ trick.name }}</a>
-                </div>
-            </div>
-        </div>
-        
         <div class="trick-card-content">
             <div class="trick-card-text">
                 <a class="link-primary" href={{ path("tricks.details", {slug: trick.slug}) }}>
@@ -21,4 +10,10 @@
             </div>
             <a href="{{ path("tricks.details", {slug: trick.slug}) }}" class="btn btn-primary">Read more</a>
         </div>
+        <div class="trick-card-background">
+            <div class="trick-card-image"
+                style="background: url('{{ trick.thumbnail }}') no-repeat center center/cover">
+            </div>
+        </div>
+    </div>
 </li>
