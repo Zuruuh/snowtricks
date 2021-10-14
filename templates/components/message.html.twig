@@ -6,7 +6,7 @@
             src="{{ message.author.getProfilePicturePath() }}"
             alt="{{ message.author.username }}'s profile picture"
             />
-            <a class="link link-primary" href="{{ path("user.profile", {user_id: message.author.id}) }}">{{message.author.username}}</a>
+            <a class="link link-primary" href="{{ path("user.profile", {user_id: message.author.id}) }}">{{ message.author.username }}</a>
         </div>
         {% if app.user.id|default("") == message.author.id %}
         <button
@@ -26,7 +26,7 @@
     <p class="mb-0 ms-2">
         {{ message.content }}
     </p>
-    <time datetime="{{ message.postDate|date("c")}}">
+    <time datetime="{{ message.postDate|date("c") }}">
         <em>
             The {{ message.postDate|date("d/m/Y") }} at {{ message.postDate|date("H:m:s") }}
         </em>
