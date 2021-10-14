@@ -52,8 +52,8 @@ class TrickService
     const HOME_ROUTE = 'home.index';
     const MAX_PER_PAGE = 10;
 
-    const SUCCESS_EDIT_MESSAGE = "This trick has been successfully edited !";
-    const SUCCESS_CREATE_MESSAGE = "Your trick has been successfully created !";
+    const SUCCESS_EDIT_MESSAGE = 'This trick has been successfully edited !';
+    const SUCCESS_CREATE_MESSAGE = 'Your trick has been successfully created !';
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -72,10 +72,10 @@ class TrickService
     }
 
     /**
-     * Checks if a trick exists
-     * 
+     * Checks if a trick exists.
+     *
      * @param string $slug
-     * 
+     *
      * @return Trick  $trick
      */
     public function exists(string $slug): Trick
@@ -85,16 +85,17 @@ class TrickService
         if (!$trick) {
             throw new NotFoundHttpException();
         }
+
         return $trick;
     }
 
     /**
-     * Saves a trick to database
-     * 
+     * Saves a trick to database.
+     *
      * @param Trick         $trick
      * @param FormInterface $videos
      * @param FormInterface $images
-     *  
+     *
      * @return string|bool $route
      */
     public function save(
@@ -111,7 +112,7 @@ class TrickService
         $statuses = [
             $this->setThumbnailImage($trick, $thumbnail),
             $this->setVideos($trick, $videos),
-            $this->setImages($trick, $images)
+            $this->setImages($trick, $images),
         ];
 
         if (in_array(false, $statuses)) {
@@ -124,13 +125,13 @@ class TrickService
     }
 
     /**
-     * Updates a trick
-     * 
+     * Updates a trick.
+     *
      * @param Trick         $trick
      * @param FormInterface $thumbnail
      * @param FormInterface $videos
      * @param FormInterface $images
-     * 
+     *
      * @return string|bool $route
      */
     public function update(
@@ -157,14 +158,15 @@ class TrickService
         }
 
         $this->flash->add('success', self::SUCCESS_EDIT_MESSAGE);
+
         return $this->generateRoute($trick->getSlug());
     }
 
     /**
-     * Updates a trick's slug
-     * 
+     * Updates a trick's slug.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return void
      */
     private function updateSlug(Trick $trick): void
@@ -174,19 +176,19 @@ class TrickService
         $this->em->persist($trick);
         $this->em->flush();
 
-        $slug = $this->makeSlug($trick->getName(), "-");
-        $trick->setSlug($trick->getId() . "-" . $slug);
+        $slug = $this->makeSlug($trick->getName(), '-');
+        $trick->setSlug($trick->getId() . '-' . $slug);
 
         $this->em->persist($trick);
         $this->em->flush();
     }
 
     /**
-     * Renames a trick's directory
-     * 
+     * Renames a trick's directory.
+     *
      * @param string $old_slug
      * @param string $slug
-     * 
+     *
      * @return void
      */
     private function move(string $old_slug, string $slug): void
@@ -196,11 +198,12 @@ class TrickService
     }
 
     /**
-     * Saves a trick's thumbnail to local storage & adds it to the trick
-     * 
+     * Saves a trick's thumbnail to local storage & 
+     * adds it to the trick.
+     *
      * @param Trick         $trick
      * @param FormInterface $form_thumbnail
-     * 
+     *
      * @return bool $status
      */
     private function setThumbnailImage(Trick $trick, FormInterface $form_thumbnail): bool
@@ -223,10 +226,10 @@ class TrickService
     }
 
     /**
-     * Updates the path of a trick's images & thumbnail
-     * 
+     * Updates the path of a trick's images & thumbnail.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return Trick $self
      */
     private function updateImages(Trick $trick): Trick
@@ -257,16 +260,15 @@ class TrickService
 
         $this->em->flush();
 
-
         return $trick;
     }
 
     /**
-     * Generates a new path for an image and returns it
-     * 
+     * Generates a new path for an image and returns it.
+     *
      * @param string $slug
      * @param string $path
-     * 
+     *
      * @return string $newPath
      */
     private function generateNewPath(string $slug, string $path): string
@@ -278,11 +280,11 @@ class TrickService
     }
 
     /**
-     * Creates TrickVideos and add them to the trick
-     * 
+     * Creates TrickVideos and add them to the trick.
+     *
      * @param Trick         $trick
      * @param FormInterface $formVideos
-     * 
+     *
      * @return bool $status
      */
     private function setVideos(Trick $trick, FormInterface $form_videos): bool
@@ -294,6 +296,7 @@ class TrickService
         $this->removeVideos($trick);
         if (sizeof($videos) > self::MAX_VIDEO) {
             $form_videos->addError(new FormError(self::MAX_VIDEO_MESSAGE));
+
             return false;
         }
         $data = array_map(function ($video) {
@@ -312,14 +315,15 @@ class TrickService
             $this->em->persist($video);
             $trick->addVideo($video);
         }
+
         return true;
     }
 
     /**
-     * Removes all videos from a trick
-     * 
+     * Removes all videos from a trick.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return void
      */
     private function removeVideos(Trick $trick): void
@@ -332,10 +336,10 @@ class TrickService
     }
 
     /**
-     * Deletes all images from a trick
-     * 
+     * Deletes all images from a trick.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return void
      */
     private function removeImages(Trick $trick): void
@@ -349,10 +353,10 @@ class TrickService
     }
 
     /**
-     * Deletes a trick's thumbnail
-     * 
+     * Deletes a trick's thumbnail.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return void
      */
     private function removeThumbnail(Trick $trick): void
@@ -362,10 +366,10 @@ class TrickService
     }
 
     /**
-     * Takes in a video url and returns either an error or true
-     * 
+     * Takes in a video url and returns either an error or true.
+     *
      * @param string $video
-     * 
+     *
      * @return FormError|array $status
      */
     private function checkVideo(string $video): FormError|array
@@ -380,17 +384,17 @@ class TrickService
             return new FormError(self::INVALID_PROVIDER);
         }
 
-        $provider = $provider === "youtu" ? "youtube" : $provider;
+        $provider = $provider === 'youtu' ? 'youtube' : $provider;
 
-        return ["provider" => $provider, "id" => $id];
+        return ['provider' => $provider, 'id' => $id];
     }
 
     /**
-     * Creates TrickImages and adds them to the trick
-     * 
+     * Creates TrickImages and adds them to the trick.
+     *
      * @param Trick         $trick
      * @param FormInterface $form_images
-     * 
+     *
      * @return bool
      */
     private function setImages(Trick $trick, FormInterface $form_images): bool
@@ -414,14 +418,14 @@ class TrickService
 
         $this->saveImages($trick, $images);
 
-        return "home.index";
+        return 'home.index';
     }
 
     /**
-     * Checks images to make sure they are valid
-     * 
+     * Checks images to make sure they are valid.
+     *
      * @param mixed $image
-     * 
+     *
      * @return bool|FormError
      */
     private function checkImage(mixed $image): bool|FormError
@@ -438,16 +442,17 @@ class TrickService
     }
 
     /**
-     * Saves images to trick
-     * 
+     * Saves images to trick.
+     *
      * @param Trick $trick
      * @param array $images
-     * 
+     *
      * @return string[] $paths
      */
     private function saveImages(Trick $trick, array $images): array
     {
         $this->removeImages($trick);
+
         return array_map(function ($image) use ($trick) {
             $path = $this->saveImage($image, $trick->getSlug());
 
@@ -463,12 +468,12 @@ class TrickService
     }
 
     /**
-     * Saves an image to it's trick folder
-     * 
+     * Saves an image to it's trick folder.
+     *
      * @param UploadedFile  $image
      * @param string        $path
      * @param string?       $name
-     * 
+     *
      * @return string $path
      */
     private function saveImage(UploadedFile $image, string $path, string $name = '')
@@ -491,10 +496,10 @@ class TrickService
     }
     /**
      * Adds error to form and returns false if there was at least one
-     * 
+     *
      * @param FormInterface $form
      * @param array         $datas
-     * 
+     *
      * @return bool
      */
     private function validateErrors(FormInterface $form, array $datas): bool
@@ -502,6 +507,7 @@ class TrickService
         foreach ($datas as $data) {
             if ($data instanceof FormError) {
                 $form->addError($data);
+
                 return true;
             }
         }
@@ -509,6 +515,14 @@ class TrickService
         return false;
     }
 
+    /**
+     * Creates a slug from a string.
+     *
+     * @param string $name
+     * @param string? $separator
+     *
+     * @return string $slug
+     */
     public function makeSlug(string $name, string $separator = '-'): string
     {
         $slug = strtolower($name);
@@ -524,18 +538,18 @@ class TrickService
         $videos = $trick->getVideos()->toArray();
         return array_map(function ($video) {
             return [
-                "id" => $video->getId(),
-                "url" => $video->getUrl(),
-                "provider" => $video->getProvider()
+                'id' => $video->getId(),
+                'url' => $video->getUrl(),
+                'provider' => $video->getProvider(),
             ];
         }, $videos);
     }
 
     /**
-     * Generates a redirect route and returns it
-     * 
+     * Generates a redirect route and returns it.
+     *
      * @param string $slug
-     * 
+     *
      * @return string $route
      */
     private function generateRoute(string $slug): string
@@ -550,17 +564,17 @@ class TrickService
     }
 
     /**
-     * Deletes a trick and it's related images
-     * 
+     * Deletes a trick and it's related images.
+     *
      * @param Trick $trick
-     * 
+     *
      * @return string $route
      */
     public function delete(Trick $trick): string
     {
 
         $folder = self::UPLOADS_DIR . $trick->getSlug();
-        $this->fileSystem->remove(getcwd() . $folder);
+        unlink(getcwd() . $folder);
 
         $entitiesList = [
             $trick->getImages(),
@@ -581,10 +595,10 @@ class TrickService
     }
 
     /**
-     * Creates a trick's directory
-     * 
+     * Creates a trick's directory.
+     *
      * @param string $slug
-     * 
+     *
      * @return void
      */
     private function createDir(string $slug): void
@@ -594,8 +608,8 @@ class TrickService
     }
 
     /**
-     * Generates a search route after a form submit
-     * 
+     * Generates a search route after a form submit.
+     *
      * @param string   $search
      * @param Category $category
      *
@@ -611,12 +625,12 @@ class TrickService
     }
 
     /**
-     * Search for tricks and returns them
-     * 
+     * Search for tricks and returns them.
+     *
      * @param string $query
      * @param int    $category
      * @param int    $page
-     * 
+     *
      * @return array
      */
     public function search(string $query, int $category, int $page): array
@@ -642,7 +656,7 @@ class TrickService
 
         return [
             'tricks' => $tricks,
-            'pagination' => $controls
+            'pagination' => $controls,
         ];
     }
 }
