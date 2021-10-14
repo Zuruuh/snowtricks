@@ -12,7 +12,7 @@
 	{% embed "./components/modal.html.twig" %}
 		{% set modal_body = "Are you sure you want to delete this trick?" %}
 		{% set modal_title = "Trick: %TRICK_NAME%" %}
-		{% set modal_link = path("tricks.delete", { slug: " " }) %}
+		{% set modal_link = path("tricks.delete", {slug: " "}) %}
 		{% set modal_footer_button = "Delete" %}
 		{% set modal_button_type = "danger" %}
 	{% endembed %}
