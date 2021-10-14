@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Form\TrickFormType;
 use App\Form\MessageFormType;
-use App\Form\TrickSearchType;
+use App\Form\TrickSearchFormType;
 use App\Service\TrickService;
 use App\Service\MessageService;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,6 +97,7 @@ class TricksController extends AbstractController
     public function edit(Request $request, string $slug): Response
     {
         $trick = $this->trick_service->exists($slug);
+
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
 
@@ -130,7 +131,7 @@ class TricksController extends AbstractController
     #[Route('/search', name: 'search')]
     public function search(Request $request): Response
     {
-        $form = $this->createForm(TrickSearchType::class);
+        $form = $this->createForm(TrickSearchFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
