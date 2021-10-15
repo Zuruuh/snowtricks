@@ -1,0 +1,7 @@
+.min-page-height {
+    min-height: calc(95vh - #{$navbar-height} - #{$footer-height});
+}
+
+.highlighted {
+    background-color: $highlight-color;
+}

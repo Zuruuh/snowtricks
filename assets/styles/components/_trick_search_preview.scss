@@ -1,0 +1,30 @@
+.tricks-search-preview-list {
+  height: auto;
+  overflow: hidden;
+  .trick-search-preview {
+    height: auto;
+    min-height: 175px;
+    .trick-preview-card-full {
+      display: flex;
+      height: 100%;
+      .trick-card-content {
+        flex-grow: 1;
+        height: 100%;
+        display: flex;
+        max-width: 66%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: start;
+        .trick-card-text {
+          flex-grow: 1;
+          * {
+            text-overflow: ellipsis;
+          }
+          a.link-primary {
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{{ form_start(form, {
+    attr: {
+    class: 'card form-card'
+    }
+}) }}
+{% if form_title|default(null) %}
+    <h2>{{ form_title }}</h2>
+{% endif %}
+{{ form_errors(form) }}
+{{ form_errors(form.content) }}
+<div class="form-floating my-2">
+    {{ form_widget(form.content, {
+        attr: {
+            placeholder: "Write a comment..",
+            class: "form-control",
+            style: "min-height: 75px"
+        }
+    }) }}
+    {{ form_label(form.content) }}
+    </div>
+    <div class="my-2 d-flex justify-content-center">
+        <button type="submit" class="btn btn-lg btn-primary">{{ button_text|default("Post comment") }}</button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,20 @@
+plugins:
+  sonar-php:
+    enabled: true
+    config:
+      minimum_severity: info
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - php:
+          mass_threshold: 28
+        - javascript:
+  phpmd:
+    enabled: true
+    config:
+      file_extensions:
+        - php
+      rulesets: "cleancode,codesize,design,naming,unusedcode"
+  scss-lint:
+    enabled: true

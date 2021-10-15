@@ -1,0 +1,11 @@
+.modal-close-button {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  &-icon::before {
+    color: #6c757d;
+    fill: #6c757d;
+    stroke: #6c757d;
+    font-size: 24px;
+  }
+}

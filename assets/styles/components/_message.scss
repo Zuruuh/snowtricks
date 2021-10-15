@@ -1,0 +1,54 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  p {
+    flex-grow: 1;
+  }
+  .message-infos-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    .message-user-infos {
+      display: flex;
+      img {
+        width: 64px;
+        height: 64px;
+      }
+      a {
+        margin-left: 0.25rem;
+      }
+    }
+  }
+
+  button.message-actions {
+    width: 32px;
+    height: 64px;
+    border: 0;
+    background-color: transparent;
+    &::after {
+      content: "";
+      font-family: "Font Awesome 5 Free", sans-serif;
+      font-size: 1.3rem;
+      color: #6c757d;
+      display: none;
+    }
+  }
+  &:hover {
+    button.message-actions::after {
+      display: block;
+    }
+  }
+}
+
+.message-action-popover {
+  .popover-body {
+    display: flex;
+    justify-content: space-around;
+    a {
+      font-size: 2rem;
+      i.fa-trash-alt {
+        color: #f44336;
+      }
+    }
+  }
+}

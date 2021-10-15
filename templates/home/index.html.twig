@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('pages/home') }}
+{% endblock %}
+
+{% block body %}
+	{% embed "./components/modal.html.twig" %}
+		{% set modal_body = "Are you sure you want to delete this trick?" %}
+		{% set modal_title = "Trick: %TRICK_NAME%" %}
+		{% set modal_link = path("tricks.delete", {slug: " "}) %}
+		{% set modal_footer_button = "Delete" %}
+		{% set modal_button_type = "danger" %}
+	{% endembed %}
+	{% include "home/header.html.twig" %}
+	{% include "home/tricks.html.twig" %}
+{% endblock %}

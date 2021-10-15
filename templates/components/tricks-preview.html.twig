@@ -1,0 +1,12 @@
+<li id="trick-{{ trick.id }}-preview"
+    class="list-group-item list-group-item-action trick-search-preview">
+    <div class="trick-card-content p-2">
+        <div class="trick-card-text">
+            <a class="link-primary" href={{ path("tricks.details", {slug: trick.slug}) }}>
+                <h4 class="trick-card-title">{{ trick.name }}</h4>
+            </a>
+            <p class="trick-card-description">{{ trick.overview }}</p>
+        </div>
+        <a href="{{ path("tricks.details", {slug: trick.slug}) }}" class="btn btn-primary">Read more</a>
+    </div>
+</li>

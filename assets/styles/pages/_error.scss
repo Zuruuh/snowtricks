@@ -1,0 +1,9 @@
+.error-page {
+    @include center;
+    height: 100%;
+    padding: 6rem 0;
+    .error-card {
+        padding: 3rem;
+        @include card-shadow;
+    }
+}

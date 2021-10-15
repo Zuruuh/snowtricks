@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+{{ title|default("Create a new trick") }}
+{% endblock %}
+{% set current_path = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params')) %}
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('forms') }}
+{{ encore_entry_script_tags('dynamic-forms') }}
+{{ encore_entry_script_tags('image-preview') }}
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {{ form_start(form, {
+                attr: {
+                    class: "card form-card"
+                }
+            }) }}
+            <fieldset>{{ form_row(form.name) }} </fieldset>
+            <fieldset>{{ form_row(form.description) }} </fieldset>
+            <fieldset>{{ form_row(form.overview) }} </fieldset>
+            <fieldset>{{ form_row(form.category) }} </fieldset>
+            <fieldset>{{ form_row(form.thumbnail) }} </fieldset>
+            <figure>
+                <img id="trick-thumbnail-preview" src="{{ trick_thumbnail|default("/static/assets/header.jpg") }}">
+                <figcaption>Current thumbnail</figcaption>
+            </figure>
+            <fieldset>
+                {{ form_row(form.images) }}
+            </fieldset>
+
+            <fieldset>
+                <div class="d-flex justify-content-between mb-2">
+                    {{ form_label(form.videos) }} 
+                    <button class="btn btn-primary add-button" data-button-type="video" id="add-video-button">
+                        <i class="fas fa-plus-square"></i>
+                    </button>
+                </div>
+                {{ form_errors(form.videos) }}
+                <ol class="list" id="video-fields" data-default-values="{{ videos|default("[]") }}">
+                    {% if videos|default(false) is empty %}
+                    <li class="video-item" data-field-id="0">
+                        <div class="dynamic-field">
+                            <input placeholder="https://www.youtube.com/watch?v=..." class="me-2" type="text" id="trick_form_videos_0" name="trick_form[videos][0]" />
+                            <button data-field="0" class="btn btn-danger"><i class="fas fa-minus-square"></i></button>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ol>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">
+                {{ current_path == path('tricks.create') ? 'Create' : 'Save modifications' }}
+            </button>
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {render_rest: false}) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Global chat{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('message') }}
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        {% if app.user %}
+        <div class="col-md-12">
+            {% embed "chat/form.html.twig" %}
+                {% set form_title = "Post a new comment" %}
+                {% set button_text = "Send" %}
+            {% endembed %}
+        {% else %}
+            <div class="col-md-6">
+                <div class="card p-3 pt-4 flex-column align-items-center">
+                    <h3>Login to post a new message</h3>
+                    <div class="card-body">
+                        <a href="{{ path("auth.login") }}" class="btn btn-primary btn-lg">Login</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+    <section id="messages" class="mt-4">
+        <div class="container">
+            <ul class="list-group">
+                {% for message in messages %}
+                    {% embed "components/message.html.twig" %}
+                    {% endembed %}
+                {% endfor %}
+            </ul>
+            {% embed "components/pagination.html.twig" %}
+                {% set route = "chat.index" %}
+            {% endembed %}
+        </div>
+    </section>
+</div>
+{% endblock %}

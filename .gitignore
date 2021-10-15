@@ -7,4 +7,20 @@
 /public/bundles/
 /var/
 /vendor/
+/config/packages/dev/
+/data/
+/public/static/uploads/
 ###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+/npm-debug.log
+/yarn-error.log
+/public/build/
+###< symfony/webpack-encore-bundle ###
+
+###> IDE Config ###
+.vscode/
+.idea/
+###< IDE CONFIG ###

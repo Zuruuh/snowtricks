@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-2 pe-4" id="page-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" id="navbar-brand" href="{{ path("home.index") }}">Snowtricks</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <a class="nav-link" href="{{ path("home.index") }}"><i class="fas fa-home"></i> Home</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="trick-dropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-snowboarding"></i> Tricks
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="trick-dropdown">
+                        <li>
+                            <a href="{{ path("home.index") }}#tricks" class="dropdown-item"><i
+                                    class="fas fa-compass"></i> Browse
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path("tricks.search") }}" class="dropdown-item"><i class="fas fa-search"></i>
+                                Search</a>
+                        </li>
+                        <li>
+                           <a href="{{ path("chat.index") }}" class="dropdown-item">
+                               <i class="fas fa-comment"></i> Chat
+                           </a> 
+                        </li>
+                        {% if is_granted("ROLE_USER") %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a href="{{ path("tricks.create") }}" class="dropdown-item"><i
+                                    class="fas fa-plus-circle"></i> Create</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% if is_granted('ROLE_USER') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profile-dropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i> User
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profile-dropdown">
+                        <li>
+                            <a href="{{ path("user.me") }}" class="dropdown-item"><i
+                                    class="fas fa-user"></i> My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a href="{{ path("auth.logout") }}" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Log out
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path("auth.login") }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path("auth.register") }}"><i class="fas fa-user"></i> Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    </div>
+</nav>

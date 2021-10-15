@@ -1,0 +1,106 @@
+image: jakzal/phpqa:php8.0
+
+variables:
+  TIMEOUT_SECONDS: 1
+
+before_script:
+  - composer --version
+  - composer install
+
+cache:
+  paths:
+    - vendor/
+
+stages:
+  - Dependencies
+  - Fixes
+  - PhpLint
+  - TwigLint
+
+security-checker:
+  stage: Dependencies
+  script:
+    - local-php-security-checker composer.lock
+  allow_failure: false
+
+composer-unused:
+  stage: Dependencies
+  script:
+    - composer require -W icanhazstring/composer-unused
+    - "composer \
+      --excludeDir=symfony \
+      --excludePackage=ext-iconv \
+      --excludePackage=symfony/dotenv \
+      --excludePackage=composer/package-version \
+      --excludePackage=symfony/proxy-manager-bridge \
+      --excludePackage=icanhazstring/composer-unused \
+      unused"
+  allow_failure: true
+
+php-cs-fixer:
+  stage: Fixes
+  script:
+    - php-cs-fixer fix src
+  allow_failure: true
+
+phpa:
+  stage: PhpLint
+  script:
+    - "phpa \
+      --exclude=./src/Kernel.php \
+      --exclude=./src/Extensions/ \
+      ./src"
+  allow_failure: true
+
+phpcs:
+  stage: PhpLint
+  script:
+    - phpcs -v --standard=PSR2 --ignore=./src/Kernel.php ./src
+  allow_failure: true
+
+phpcs-security-audit:
+  stage: PhpLint
+  script:
+    - phpcs -v --extensions=php,inc,lib,module,info --standard=Security --ignore=./src/Kernel.php ./src
+  allow_failure: true
+
+phplint:
+  stage: PhpLint
+  script:
+    - phplint --exclude=./src/Kernel.php ./src
+  allow_failure: true
+
+phpstan:
+  stage: PhpLint
+  script:
+    - phpstan analyse ./src
+  allow_failure: true
+
+# code-quality:
+#   image: docker:latest
+#   stage: PhpLint
+#   variables:
+#     DOCKER_DRIVER: overlay
+#   services:
+#     - docker:dind
+#     - composer:latest
+#   script:
+#     - docker pull codeclimate/codeclimate
+#     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate init
+#     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -f json > codeclimate.json
+#   artifacts:
+#     expire_in: 30 days
+#     paths: [code-climate.json]
+#   allow_failure: true
+
+twig-lint:
+  stage: TwigLint
+  script:
+    - twig-lint lint ./templates
+  allow_failure: true
+
+twigcs:
+  stage: TwigLint
+  script:
+    - twigcs ./templates
+  allow_failure: true

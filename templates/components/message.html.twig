@@ -1,0 +1,34 @@
+<li class="list-group-item list-group-item-action message">
+    <div class="message-infos-wrapper">
+        <div class="message-user-infos">
+            <img
+            class="rounded-circle border border-1 border-primary"
+            src="{{ message.author.getProfilePicturePath() }}"
+            alt="{{ message.author.username }}'s profile picture"
+            />
+            <a class="link link-primary" href="{{ path("user.profile", {user_id: message.author.id}) }}">{{ message.author.username }}</a>
+        </div>
+        {% if app.user.id|default("") == message.author.id %}
+        <button
+            tabindex="0"
+            type="button"
+            class="message-actions rounded-circle"
+            data-bs-toggle="popover"
+            data-bs-title="Message actions"
+            data-bs-content="
+            <a href='{{ path("chat.edit", {id: message.id}) }}'><i class='fas fa-pen'></i></a>
+            <a href='{{ path("chat.delete", {id: message.id}) }}'>
+                <i class='fas fa-trash-alt'></i>
+            </a>">
+        </button>
+        {% endif %}
+    </div>
+    <p class="mb-0 ms-2">
+        {{ message.content }}
+    </p>
+    <time datetime="{{ message.postDate|date("c") }}">
+        <em>
+            The {{ message.postDate|date("d/m/Y") }} at {{ message.postDate|date("H:m:s") }}
+        </em>
+    </time>
+</li>

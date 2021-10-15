@@ -1,0 +1,17 @@
+.anchor-link {
+    font-size: 40px;
+    font-weight: bold;
+    color: $anchor-links-color;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    z-index: 15;
+    &:hover {
+        color: #000;
+        animation: hang;
+        animation-duration: 2s;
+        animation-direction: alternate;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+}

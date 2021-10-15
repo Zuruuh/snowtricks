@@ -1,0 +1,44 @@
+// * Utils imports
+@import "./utils/variables";
+@import "./utils/functions";
+@import "./utils/helpers";
+@import "./utils/mixins";
+@import "./utils/animations";
+
+// * Vendor imports
+@import "./vendor/bootstrap";
+@import "./vendor/fontawesome";
+@import "./vendor/plyr";
+
+// * Base imports
+@import "./base/reset";
+@import "./base/typography";
+
+// * Components imports
+@import "./components/curve";
+@import "./components/anchor_link";
+@import "./components/password_visibility_toggler";
+@import "./components/toast";
+@import "./components/video_service";
+@import "./components/scrollable";
+@import "./components/badge";
+@import "./components/actions";
+@import "./components/modal";
+@import "./components/trick_search_preview";
+@import "./components/message";
+@import "./components/image_preview";
+
+// * Layout Imports
+@import "./layout/navigation";
+@import "./layout/swiper";
+@import "./layout/header";
+@import "./layout/forms";
+@import "./layout/footer";
+
+// * Pages imports
+@import "./pages/home";
+@import "./pages/tricks";
+@import "./pages/error";
+@import "./pages/tricks/details";
+
+// * Themes import

@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('forms') }}
+{% endblock %}
+
+{% block body %}
+<section id="registration-form" class="container py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {{ form_start(form, {
+                    attr: {
+                        class: 'card form-card',
+                    }
+                }) }}
+                <h2 class="h3 mb-3 font-weight-normal">Register</h2>
+                {{ form_errors(form) }}
+                <div class="my-2">
+                    {{ form_row(form.username, {
+                        label: "Username",
+                        attr: {
+                            class: "form-control"
+                        }
+                    }) }}
+                </div>
+                <div class="my-2">
+                    {{ form_row(form.email, {
+                        label: "Email",
+                        attr: {
+                            class: "form-control"
+                        }
+                    }) }}
+                </div>
+                <div class="my-2">
+                    {{ form_errors(form.plainPassword, {
+                        attr: {
+                            class: 'alert alert-danger'
+                        }
+                    }) }}
+                    {{ form_label(form.plainPassword) }}
+                    <div class="password-field">
+                        <i class="password-field-toggler fas fa-eye-slash"></i>
+                        {{ form_widget(form.plainPassword, {
+                            attr: {
+                                class: "form-control",
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <div class="mb-3 mt-1">
+                    {{ form_errors(form.agreeTerms) }}
+                    <div class="d-flex align-items-center check-element">
+
+                        {{ form_widget(form.agreeTerms, {
+                                attr: {
+                                    class: "checkbox me-2",
+                                }
+                            }) }}
+                        <label>Agree with <a href="#">terms</a></label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <div class="mt-2 d-flex justify-content-center">
+                    <a href="{{ path('auth.login') }}" class="btn btn-link">Already have an account?</a>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
