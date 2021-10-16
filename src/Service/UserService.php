@@ -7,7 +7,6 @@ use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -83,13 +82,12 @@ class UserService
      * Updates an user's profile
      *
      * @param User          $user
-     * @param UploadedFile $image_form
+     * @param UploadedFile? $image_form
      *
      * @return void
      */
-    public function update(User $user, UploadedFile $image): string
+    public function update(User $user, mixed $image): string
     {
-        dump($image);
         $this->updateProfilePicture($user, $image);
 
         $this->flash->add('success', self::PROFILE_UPDATED);
@@ -100,13 +98,16 @@ class UserService
     /**
      * Updates an user's profile picture
      *
-     * @param User          $user
-     * @param UploadedFile $image
+     * @param User               $user
+     * @param UploadedFile? $image
      *
      * @return void
      */
-    public function updateProfilePicture(User $user, UploadedFile $image): void
+    public function updateProfilePicture(User $user, mixed $image): void
     {
+        if (!$image) {
+            return;
+        }
         $current_picture = $user->getProfilePicturePath();
 
         $image_name = $user->getId() . '.' . $image->guessExtension();

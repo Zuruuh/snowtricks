@@ -61,8 +61,9 @@ class TricksController extends AbstractController
                 $form->get('content')->getData(),
                 $trick
             );
-
-            return $this->redirect($route);
+            if ($route) {
+                return $this->redirect($route);
+            }
         }
         $return_params['form'] = $form->createView();
         return $this->render(
@@ -110,7 +111,9 @@ class TricksController extends AbstractController
                 $form->get('videos'),
                 $form->get('images'),
             );
-            return $this->redirect($route);
+            if ($route) {
+                return $this->redirect($route);
+            }
         }
         $videos = $this->trick_service->getVideos($trick);
 

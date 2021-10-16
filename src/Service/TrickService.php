@@ -147,7 +147,7 @@ class TrickService
             $this->setImages($trick, $images),
         ];
 
-        $this->updateSlug($trick);
+        $new_slug = $this->updateSlug($trick);
 
         $this->move($slug, $trick->getSlug());
 
@@ -159,7 +159,7 @@ class TrickService
 
         $this->flash->add('success', self::SUCCESS_EDIT_MESSAGE);
 
-        return $this->generateRoute($trick->getSlug());
+        return $this->generateRoute($new_slug);
     }
 
     /**
@@ -167,20 +167,22 @@ class TrickService
      *
      * @param Trick $trick
      *
-     * @return void
+     * @return string $new_slug
      */
-    private function updateSlug(Trick $trick): void
+    private function updateSlug(Trick $trick): string
     {
         $trick->setSlug(uniqid());
 
         $this->em->persist($trick);
         $this->em->flush();
 
-        $slug = $this->makeSlug($trick->getName(), '-');
-        $trick->setSlug($trick->getId() . '-' . $slug);
+        $slugged_name = $this->makeSlug($trick->getName(), '-');
+        $slug = $trick->getId() . '-' . $slugged_name;
+        $trick->setSlug($slug);
 
         $this->em->persist($trick);
         $this->em->flush();
+        return $slug;
     }
 
     /**
@@ -489,7 +491,6 @@ class TrickService
             mkdir($absolute_path, 0777, true);
         }
 
-        dump($path);
         $image->move($absolute_path, $filename);
 
         return $path . $filename;
@@ -573,8 +574,11 @@ class TrickService
     public function delete(Trick $trick): string
     {
 
-        $folder = self::UPLOADS_DIR . $trick->getSlug();
-        unlink(getcwd() . $folder);
+        $folder = self::UPLOADS_DIR . self::IMAGES_DIR . $trick->getSlug();
+        $content = array_slice(scandir(getcwd() . $folder), 2);
+
+        $this->deleteFolderContent($folder, $content);
+        rmdir(getcwd() . $folder);
 
         $entitiesList = [
             $trick->getImages(),
@@ -592,6 +596,21 @@ class TrickService
         $this->em->flush();
 
         return $this->router->generate(self::HOME_ROUTE);
+    }
+
+    /**
+     * Deletes a folder's content
+     * 
+     * @param string $folder
+     * @param array  $files
+     * 
+     * @return void
+     */
+    private function deleteFolderContent(string $folder, array $files): void
+    {
+        foreach ($files as $file) {
+            unlink(getcwd() . $folder . '/' . $file);
+        }
     }
 
     /**
