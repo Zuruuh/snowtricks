@@ -67,6 +67,14 @@ Then, simply build all the assets by running this command:
 $ yarn build
 ```
 
+Once this is done, setup the database by running the following commands:
+
+```bash
+$ php bin/console doctrine:database:create
+$ php bin/console d:m:m
+$ php bin/console d:f:l
+```
+
 Now your server should be ready ! You'll just have to start it.
 
 ## Starting the server
