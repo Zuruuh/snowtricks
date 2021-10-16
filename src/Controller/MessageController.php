@@ -65,7 +65,7 @@ class MessageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $route = $this->message_service->update($message, $form->get('content')->getData());
 
-            return $this->redirectToRoute($route);
+            return $this->redirect($route);
         }
 
         return $this->render('chat/edit.html.twig', [
@@ -81,6 +81,6 @@ class MessageController extends AbstractController
 
         $route = $this->message_service->delete($message);
 
-        return $this->redirectToRoute($route);
+        return $this->redirect($route);
     }
 }

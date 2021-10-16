@@ -611,11 +611,11 @@ class TrickService
      * Generates a search route after a form submit.
      *
      * @param string   $search
-     * @param Category $category
+     * @param Category? $category
      *
      * @return string $route
      */
-    public function generateSearchRoute(string $search, Category $category): string
+    public function generateSearchRoute(string $search, mixed $category): string
     {
         $params['query'] = $this->makeSlug($search, '+');
         if ($category) {

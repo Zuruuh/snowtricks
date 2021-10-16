@@ -6,6 +6,7 @@ use App\Entity\Trick;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use DoctrineExtensions\Query\Mysql\MatchAgainst;
 
 /**
  * @method Trick|null find($id, $lockMode = null, $lockVersion = null)
