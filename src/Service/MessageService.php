@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Controller\MessageController;
 use App\Entity\Message;
+use App\Entity\Trick;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -96,19 +97,20 @@ class MessageService
     /**
      * Creates a new message and save it to database
      *
-     * @param string   $content
-     * @param int|null $trick_id
+     * @param string     $content
+     * @param Trick|null $trick
      *
      * @return string $route
      */
-    public function save(string $content, int $trick_id = null): string
+    public function save(string $content, Trick $trick = null): string
     {
         $message = (new Message())
             ->setAuthor($this->security->getUser())
-            ->setPost($trick_id)
+            ->setPost($trick)
             ->setContent($content);
         $this->em->persist($message);
         $this->em->flush();
+        dump($message);
 
         return $this->generateRoute($message);
     }

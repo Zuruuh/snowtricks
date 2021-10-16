@@ -53,15 +53,16 @@ class TricksController extends AbstractController
         if (!$this->getUser()) {
             return $this->render('tricks/details.html.twig', $return_params);
         }
-
         $form = $this->createForm(MessageFormType::class);
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $route = $this->message_service->save(
                 $form->get('content')->getData(),
-                null
+                $trick
             );
 
-            return $this->redirectToRoute($route);
+            return $this->redirect($route);
         }
         $return_params['form'] = $form->createView();
         return $this->render(
