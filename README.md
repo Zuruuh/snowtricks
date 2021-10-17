@@ -28,8 +28,8 @@ npm -v
 yarn -v
 ```
 
-Once this is done, update the DSN env variables in the .env file.  
-Then, rename the .env file to be .env.local
+Once this is done, clone your .env file to be .env.local `$ cp .env .env.local`
+Then, update all the env variables needed in the .env.local file.
 
 ### Setup the developing environment
 
@@ -44,9 +44,9 @@ Now, you'll have to setup the database. Run the following commands (make sure to
 
 ```bash
 $ docker-compose up -d
-$ php bin/console doctrine:database:create
-$ php bin/console d:m:m
-$ php bin/console d:f:l
+$ symfony console doctrine:database:create
+$ symfony console d:m:m
+$ symfony console d:f:l
 ```
 
 ## Setup the production environment
@@ -70,9 +70,9 @@ $ yarn build
 Once this is done, setup the database by running the following commands:
 
 ```bash
-$ php bin/console doctrine:database:create
-$ php bin/console d:m:m
-$ php bin/console d:f:l
+$ symfony console doctrine:database:create
+$ symfony console d:m:m
+$ symfony console d:f:l
 ```
 
 Now your server should be ready ! You'll just have to start it.
