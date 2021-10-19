@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\SecurityService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -14,20 +15,21 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SecurityController extends AbstractController
 {
-    private $flash;
+    private FlashBagInterface $flash;
     private MailerInterface $mailer;
+    private SecurityService $security_service;
 
-    public function __construct(FlashBagInterface $flash, MailerInterface $mailer)
+    public function __construct(FlashBagInterface $flash, MailerInterface $mailer, SecurityService $security_service)
     {
         $this->flash = $flash;
         $this->mailer = $mailer;
+        $this->security_service = $security_service;
     }
 
     #[Route('/login', name: 'auth.login')]
@@ -118,7 +120,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/reset-password', name: 'auth.reset_password')]
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function resetPassword(Request $request): Response
     {
         if ($this->getUser()) {
             $this->flash->add('warning', 'You are already connected !');
@@ -130,8 +132,7 @@ class SecurityController extends AbstractController
         $user_repo = $this->getDoctrine()->getRepository(User::class);
         $em = $this->getDoctrine()->getManager();
 
-        $service = new \App\Service\SecurityService($this->flash, $passwordEncoder);
-        $user = $service->checkToken($token, $user_repo);
+        $user = $this->security_service->checkToken($token, $user_repo);
 
         if ((bool) !$user) {
             return $this->redirectToRoute('auth.forgot_password');
@@ -165,7 +166,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $service->savePassword($user, $form->getData()['password'], $em);
+            $this->security_service->savePassword($user, $form->getData()['password'], $em);
 
             return $this->redirectToRoute('auth.login');
         }
